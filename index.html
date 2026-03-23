@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>World Caves Database</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        /* THE "CAVER BOB" AESTHETIC */
+        body {
+            background-color: #fff;
+            color: #000;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 13px;
+            padding: 20px;
+        }
+
+        h1 { border-bottom: 2px solid #000; padding-bottom: 5px; font-size: 20px; }
+
+        /* Making the table look like a printed report */
+        table.dataTable {
+            border: 1px solid #000 !important;
+            border-collapse: collapse !important;
+        }
+        
+        table.dataTable thead th, table.dataTable tfoot th {
+            background-color: #eee;
+            border: 1px solid #000 !important;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 8px !important;
+        }
+
+        table.dataTable td {
+            border: 1px solid #ccc !important;
+            padding: 4px 8px !important;
+        }
+
+        /* Styling the Search Box to look retro */
+        .dataTables_filter input {
+            border: 1px solid #000;
+            font-family: monospace;
+            padding: 3px;
+        }
+        
+        /* Footer inputs styling */
+        tfoot input {
+            width: 100%;
+            padding: 3px;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 11px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+<h1>WORLD CAVES DATABASE</h1>
+<p>Interactive Archive</p>
+
+<table id="caverTable" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>State</th>
+            <th>County</th>
+            <th>Length (m)</th>
+            <th>Depth (m)</th>
+            <th>Source</th>
+            <th>Date</th>
+            <th>Comment</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>State</th>
+            <th>County</th>
+            <th>Length (m)</th>
+            <th>Depth (m)</th>
+            <th>Source</th>
+            <th>Date</th>
+            <th>Comment</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        <!-- Data will be loaded via AJAX from caves_data.json -->
+    </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // 1. Add search boxes to the footer for each column
+    $('#caverTable tfoot th').each(function () {
+        var title = $(this).text();
+        $(this).html('<input type="text" placeholder="Filter ' + title + '" />');
+    });
+
+    // 2. Initialize DataTable
+    var table = $('#caverTable').DataTable({
+        ajax: 'caves_data.json',
+        pageLength: 50,
+        order: [[5, "desc"]], /* Default sort by Length descending, which is column index 5 */
+        columns: [
+            { data: 'type' },
+            { data: 'cave_name' },
+            { data: 'country' },
+            { data: 'state' },
+            { data: 'county' },
+            { data: 'length_meters', type: 'num' }, /* Make sure it sorts numerically */
+            { data: 'depth_meters', type: 'num' },
+            { data: 'source' },
+            { data: 'date' },
+            { data: 'comment' }
+        ],
+        columnDefs: [
+            { targets: "_all", className: "dt-nowrap" } // Keeps lines from wrapping
+        ]
+    });
+
+    // 3. Apply the individual column search functionality
+    table.columns().every(function () {
+        var that = this;
+        $('input', this.footer()).on('keyup change clear', function () {
+            if (that.search() !== this.value) {
+                that.search(this.value).draw();
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
