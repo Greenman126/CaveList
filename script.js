@@ -3,13 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const sortableHeaders = document.querySelectorAll('.sortable');
     
+    // Grab the navigation links for the new sorting buttons
+    const longestCavesBtn = document.getElementById('longestCavesBtn');
+    const deepestCavesBtn = document.getElementById('deepestCavesBtn');
+    
     let allCaves = [];
-    let currentData = []; // Keeps track of currently filtered data for sorting
+    let currentData = []; 
 
-
-
+    // Default sorting when the page loads
     let currentSortColumn = 'length';
-    let currentSortDirection = -1; // 1 for ascending, -1 for descending
+    let currentSortDirection = -1; 
 
     // 1. Fetch the data
     fetch('caves_data.json')
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Filter Functionality (Updated for 'type')
+    // 3. Filter Functionality
     filterButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -64,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
             }
             
-            // Apply sorting if a column has already been sorted
             if (currentSortColumn) {
                 sortData(currentSortColumn, currentSortDirection);
             } else {
@@ -73,12 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 4. Sort Functionality (New!)
+    // 4. Sortable Column Headers
     sortableHeaders.forEach(header => {
         header.addEventListener('click', () => {
             const sortColumn = header.getAttribute('data-sort');
             
-            // Toggle direction if clicking the same column, otherwise default ascending
             if (currentSortColumn === sortColumn) {
                 currentSortDirection *= -1; 
             } else {
@@ -90,17 +91,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 5. Navigation Link Sorting (Longest & Deepest)
+    if (longestCavesBtn) {
+        longestCavesBtn.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            currentSortColumn = 'length';
+            currentSortDirection = -1; 
+            sortData(currentSortColumn, currentSortDirection);
+        });
+    }
+
+    if (deepestCavesBtn) {
+        deepestCavesBtn.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            currentSortColumn = 'depth';
+            currentSortDirection = -1; 
+            sortData(currentSortColumn, currentSortDirection);
+        });
+    }
+
+    // 6. The actual sorting logic
     function sortData(column, direction) {
         currentData.sort((a, b) => {
             let valA, valB;
             
-            // Determine what values to compare based on the column
             if (column === 'name') { valA = (a.cave_name || '').toLowerCase(); valB = (b.cave_name || '').toLowerCase(); }
             else if (column === 'country') { valA = (a.country || '').toLowerCase(); valB = (b.country || '').toLowerCase(); }
             else if (column === 'state') { valA = (a.state || '').toLowerCase(); valB = (b.state || '').toLowerCase(); }
             else if (column === 'county') { valA = (a.county || '').toLowerCase(); valB = (b.county || '').toLowerCase(); }
             else if (column === 'type') { valA = (a.type || '').toLowerCase(); valB = (b.type || '').toLowerCase(); }
-            // For length and depth, compare numerically
             else if (column === 'length') { valA = parseFloat(a.length_meters) || 0; valB = parseFloat(b.length_meters) || 0; }
             else if (column === 'depth') { valA = parseFloat(a.depth_meters) || 0; valB = parseFloat(b.depth_meters) || 0; }
             
