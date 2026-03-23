@@ -170,15 +170,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         renderTable(currentData);
     }
-});
 
-const searchInput = document.getElementById('searchInput');
+    const searchInput = document.getElementById('searchInput');
 
-searchInput.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    const filtered = currentData.filter(cave => 
-        cave.cave_name.toLowerCase().includes(term) || 
-        cave.country.toLowerCase().includes(term)
-    );
-    renderTable(filtered);
+    //search listener
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            
+            const filtered = currentData.filter(cave => {
+                // Use fallback empty strings in case a cave is missing a field
+                const name = (cave.cave_name || '').toLowerCase();
+                const country = (cave.country || '').toLowerCase();
+                const state = (cave.state || '').toLowerCase(); 
+                
+                return name.includes(term) || country.includes(term) || state.includes(term);
+            });
+            
+            renderTable(filtered);
+        });
+    }
+
+
 });
