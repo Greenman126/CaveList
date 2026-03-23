@@ -5,8 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let allCaves = [];
     let currentData = []; // Keeps track of currently filtered data for sorting
-    let currentSortColumn = null;
-    let currentSortDirection = 1; // 1 for ascending, -1 for descending
+
+
+
+    let currentSortColumn = 'length;
+    let currentSortDirection = -1; // 1 for ascending, -1 for descending
 
     // 1. Fetch the data
     fetch('caves_data.json')
@@ -14,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(jsonResponse => {
             allCaves = jsonResponse.data; 
             currentData = [...allCaves];
-            renderTable(currentData);
+            sortData(currentSortColumn, currentSortDirection);
         })
         .catch(error => console.error('Error loading cave data:', error));
 
