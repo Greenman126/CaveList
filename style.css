@@ -84,3 +84,13 @@ tbody tr:hover {
     background-color: #444;
     color: #fff;
 }
+
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f4f4f4;
+    z-index: 10;
+}
+
+th.sortable.sort-asc::after { content: " ↑"; }
+th.sortable.sort-desc::after { content: " ↓"; }

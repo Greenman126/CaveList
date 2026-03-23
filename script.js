@@ -49,6 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderTable(dataArray) {
         tableBody.innerHTML = ''; 
+
+        if (dataArray.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No caves match these criteria.</td></tr>';
+            return;
+        }
         
         dataArray.forEach((cave) => {
             const row = document.createElement('tr');
@@ -97,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (caveType === 'All') {
                 currentData = [...allCaves];
             } else if (caveType === 'limestone') {
-                currentData = allCaves.filter(cave => !cave.type || cave.type.trim() === "");
+                currentData = allCaves.filter(cave => !cave.type || cave.type.trim() === "" || cave.type.toLowerCase() === "limestone");
             } else {
                 currentData = allCaves.filter(cave => 
                     cave.type && cave.type.toLowerCase() === caveType.toLowerCase()
@@ -143,6 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sortData(column, direction) {
         currentData.sort((a, b) => {
+            // Active class
+            sortableHeaders.forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+            const activeHeader = document.querySelector(`th[data-sort="${column}"]`);
+            if (activeHeader) {
+                activeHeader.classList.add(direction === 1 ? 'sort-asc' : 'sort-desc');
+            }
+            // Rest of sorting logic
             let valA, valB;
             if (column === 'name') { valA = (a.cave_name || '').toLowerCase(); valB = (b.cave_name || '').toLowerCase(); }
             else if (column === 'country') { valA = (a.country || '').toLowerCase(); valB = (b.country || '').toLowerCase(); }
@@ -158,4 +170,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         renderTable(currentData);
     }
+});
+
+const searchInput = document.getElementById('searchInput');
+
+searchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const filtered = currentData.filter(cave => 
+        cave.cave_name.toLowerCase().includes(term) || 
+        cave.country.toLowerCase().includes(term)
+    );
+    renderTable(filtered);
 });
