@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worldwide Cave Rankings - My Version</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* A little CSS to make it obvious the headers are clickable */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+        th.sortable:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,17 +28,29 @@
     </header>
 
     <main>
+        <section class="filters">
+            <span>Filter by Type:</span>
+            <button class="filter-btn active" data-type="All">All</button>
+            <button class="filter-btn" data-type="gypsum">Gypsum</button>
+            <button class="filter-btn" data-type="lava">Lava</button>
+            <button class="filter-btn" data-type="underwater">Underwater</button>
+            <button class="filter-btn" data-type="salt">Salt</button>
+            <button class="filter-btn" data-type="sandstone_quartzite">Sandstone/Quartzite</button>
+            <button class="filter-btn" data-type="piping">Piping</button>
+        </section>
+
         <div class="table-container">
             <table id="caveTable">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Country</th>
-                        <th>State/Province</th>
-                        <th>County</th>
-                        <th>Length</th>
-                        <th>Depth</th>
+                        <th class="sortable" data-sort="name">Name ↕</th>
+                        <th class="sortable" data-sort="country">Country ↕</th>
+                        <th class="sortable" data-sort="state">State/Province ↕</th>
+                        <th class="sortable" data-sort="county">County ↕</th>
+                        <th class="sortable" data-sort="length">Length ↕</th>
+                        <th class="sortable" data-sort="depth">Depth ↕</th>
+                        <th class="sortable" data-sort="type">Type ↕</th>
                         <th>Source</th>
                         <th>Date</th>
                         <th>Comment</th>

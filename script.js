@@ -1,26 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tableBody = document.getElementById('tableBody');
     const filterButtons = document.querySelectorAll('.filter-btn');
+    const sortableHeaders = document.querySelectorAll('.sortable');
+    
     let allCaves = [];
+    let currentData = []; // Keeps track of currently filtered data for sorting
+    let currentSortColumn = null;
+    let currentSortDirection = 1; // 1 for ascending, -1 for descending
 
-    // 1. Fetch the data from your caves_data.json file
+    // 1. Fetch the data
     fetch('caves_data.json')
         .then(response => response.json())
         .then(jsonResponse => {
-            // Your array of caves is inside the "data" property
             allCaves = jsonResponse.data; 
-            renderTable(allCaves); // Initial render
+            currentData = [...allCaves];
+            renderTable(currentData);
         })
         .catch(error => console.error('Error loading cave data:', error));
 
-    // 2. Function to render the table based on the dataset provided
+    // 2. Render Table
     function renderTable(dataArray) {
-        tableBody.innerHTML = ''; // Clear existing rows
+        tableBody.innerHTML = ''; 
         
         dataArray.forEach((cave, index) => {
             const row = document.createElement('tr');
             
-            // Format length and depth to include "m" if they exist
             const lengthDisplay = cave.length_meters ? `${cave.length_meters} m` : 'N/A';
             const depthDisplay = cave.depth_meters ? `${cave.depth_meters} m` : 'N/A';
             
@@ -41,25 +45,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Add Filter Functionality
+    // 3. Filter Functionality (Updated for 'type')
     filterButtons.forEach(button => {
         button.addEventListener('click', (e) => {
-            // Remove 'active' class from all buttons
             filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Add 'active' class to the clicked button
             e.target.classList.add('active');
 
-            const terrainType = e.target.getAttribute('data-terrain');
+            const caveType = e.target.getAttribute('data-type');
 
-            if (terrainType === 'All') {
-                renderTable(allCaves);
+            if (caveType === 'All') {
+                currentData = [...allCaves];
             } else {
-                // Filter caves matching the selected type
-                const filteredCaves = allCaves.filter(cave => 
-                    cave.type && cave.type.toLowerCase() === terrainType.toLowerCase()
+                currentData = allCaves.filter(cave => 
+                    cave.type && cave.type.toLowerCase() === caveType.toLowerCase()
                 );
-                renderTable(filteredCaves);
+            }
+            
+            // Apply sorting if a column has already been sorted
+            if (currentSortColumn) {
+                sortData(currentSortColumn, currentSortDirection);
+            } else {
+                renderTable(currentData);
             }
         });
     });
+
+    // 4. Sort Functionality (New!)
+    sortableHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const sortColumn = header.getAttribute('data-sort');
+            
+            // Toggle direction if clicking the same column, otherwise default ascending
+            if (currentSortColumn === sortColumn) {
+                currentSortDirection *= -1; 
+            } else {
+                currentSortColumn = sortColumn;
+                currentSortDirection = 1;
+            }
+            
+            sortData(currentSortColumn, currentSortDirection);
+        });
+    });
+
+    function sortData(column, direction) {
+        currentData.sort((a, b) => {
+            let valA, valB;
+            
+            // Determine what values to compare based on the column
+            if (column === 'name') { valA = (a.cave_name || '').toLowerCase(); valB = (b.cave_name || '').toLowerCase(); }
+            else if (column === 'country') { valA = (a.country || '').toLowerCase(); valB = (b.country || '').toLowerCase(); }
+            else if (column === 'state') { valA = (a.state || '').toLowerCase(); valB = (b.state || '').toLowerCase(); }
+            else if (column === 'county') { valA = (a.county || '').toLowerCase(); valB = (b.county || '').toLowerCase(); }
+            else if (column === 'type') { valA = (a.type || '').toLowerCase(); valB = (b.type || '').toLowerCase(); }
+            // For length and depth, compare numerically
+            else if (column === 'length') { valA = parseFloat(a.length_meters) || 0; valB = parseFloat(b.length_meters) || 0; }
+            else if (column === 'depth') { valA = parseFloat(a.depth_meters) || 0; valB = parseFloat(b.depth_meters) || 0; }
+            
+            if (valA < valB) return -1 * direction;
+            if (valA > valB) return 1 * direction;
+            return 0;
+        });
+        
+        renderTable(currentData);
+    }
 });
