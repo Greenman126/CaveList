@@ -29,9 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${cave.cave_name || 'N/A'}</td>
                 <td>${cave.country || 'N/A'}</td>
                 <td>${cave.state || 'N/A'}</td>
+                <td>${cave.county || 'N/A'}</td> 
                 <td>${lengthDisplay}</td>
                 <td>${depthDisplay}</td>
                 <td>${cave.type || 'N/A'}</td>
+                <td>${cave.source || 'N/A'}</td>
+                <td>${cave.date || 'N/A'}</td>
+                <td>${cave.comment || ''}</td>
             `;
             tableBody.appendChild(row);
         });
