@@ -104,18 +104,26 @@ $(document).ready(function() {
         $(this).html('<input type="text" placeholder="Filter ' + title + '" />');
     });
 
-    // 2. Initialize DataTable
+// 2. Initialize DataTable
     var table = $('#caverTable').DataTable({
-        ajax: 'caves_data.json',
-        pageLength: 50,
-        order: [[5, "desc"]], /* Default sort by Length descending, which is column index 5 */
+        data: caveData,
+        
+        // --- ADDED THIS BLOCK BELOW ---
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All']
+        ],
+        pageLength: -1, // This makes "All" the default
+        // --- ADDED THIS BLOCK ABOVE ---
+
+        order: [[5, "desc"]], /* Default sort by Length descending */
         columns: [
             { data: 'type' },
             { data: 'cave_name' },
             { data: 'country' },
             { data: 'state' },
             { data: 'county' },
-            { data: 'length_meters', type: 'num' }, /* Make sure it sorts numerically */
+            { data: 'length_meters', type: 'num' }, 
             { data: 'depth_meters', type: 'num' },
             { data: 'source' },
             { data: 'date' },
@@ -125,7 +133,7 @@ $(document).ready(function() {
             { targets: "_all", className: "dt-nowrap" } // Keeps lines from wrapping
         ]
     });
-
+    
     // 3. Apply the individual column search functionality
     table.columns().every(function () {
         var that = this;
