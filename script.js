@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    let currentSortColumn = 'length;
+    let currentSortColumn = 'length';
     let currentSortDirection = -1; // 1 for ascending, -1 for descending
 
     // 1. Fetch the data
