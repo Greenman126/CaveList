@@ -1,98 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Caves Database</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
-        body { background-color: #fff; color: #000; font-family: "Courier New", Courier, monospace; font-size: 13px; padding: 20px; }
-        h1 { border-bottom: 2px solid #000; padding-bottom: 5px; font-size: 20px; }
-        table.dataTable { border: 1px solid #000 !important; border-collapse: collapse !important; }
-        table.dataTable thead th, table.dataTable tfoot th { background-color: #eee; border: 1px solid #000 !important; text-transform: uppercase; font-weight: bold; padding: 8px !important; }
-        table.dataTable td { border: 1px solid #ccc !important; padding: 4px 8px !important; }
-        tfoot input { width: 100%; padding: 3px; box-sizing: border-box; font-family: monospace; font-size: 11px; border: 1px solid #000; }
+        /* THE "CAVER BOB" RETRO AESTHETIC */
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 13px;
+            padding: 20px;
+            line-height: 1.2;
+        }
+
+        h1 { 
+            border-bottom: 2px solid #000; 
+            padding-bottom: 5px; 
+            font-size: 22px; 
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Table Styling */
+        table.dataTable {
+            border: 1px solid #000 !important;
+            border-collapse: collapse !important;
+            margin-top: 10px !important;
+        }
+        
+        table.dataTable thead th, table.dataTable tfoot th {
+            background-color: #eeeeee;
+            border: 1px solid #000 !important;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 10px !important;
+            text-align: left;
+        }
+
+        table.dataTable td {
+            border: 1px solid #cccccc !important;
+            padding: 5px 10px !important;
+            white-space: nowrap;
+        }
+
+        /* Search/Filter Styling */
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #000;
+            font-family: "Courier New", monospace;
+            padding: 4px;
+            margin-left: 10px;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 1px solid #000;
+            font-family: "Courier New", monospace;
+            padding: 2px;
+        }
+
+        tfoot input {
+            width: 100%;
+            padding: 4px;
+            box-sizing: border-box;
+            font-family: "Courier New", monospace;
+            font-size: 11px;
+            border: 1px solid #000;
+            background-color: #fff;
+        }
+        
+        /* Highlight row on hover */
+        table.dataTable tbody tr:hover {
+            background-color: #f0f0f0 !important;
+        }
     </style>
 </head>
 <body>
 
-<h1>WORLD CAVES DATABASE</h1>
-<p>Linked to caves_data.json</p>
+    <h1>World Caves Database</h1>
+    <div class="subtitle">INTERACTIVE ARCHIVE - MULTI-COLUMN FILTERING ENABLED</div>
 
-<table id="caverTable" class="display" style="width:100%">
-    <thead>
-        <tr>
-            <th>Type</th>
-            <th>Name</th>
-            <th>Country</th>
-            <th>State</th>
-            <th>County</th>
-            <th>Length (m)</th>
-            <th>Depth (m)</th>
-            <th>Source</th>
-            <th>Date</th>
-            <th>Comment</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>Type</th>
-            <th>Name</th>
-            <th>Country</th>
-            <th>State</th>
-            <th>County</th>
-            <th>Length</th>
-            <th>Depth</th>
-            <th>Source</th>
-            <th>Date</th>
-            <th>Comment</th>
-        </tr>
-    </tfoot>
-</table>
+    <table id="caverTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Cave Name</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>County</th>
+                <th>Length (m)</th>
+                <th>Depth (m)</th>
+                <th>Source</th>
+                <th>Date</th>
+                <th>Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+        <tfoot>
+            <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>County</th>
+                <th>Length</th>
+                <th>Depth</th>
+                <th>Source</th>
+                <th>Date</th>
+                <th>Comment</th>
+            </tr>
+        </tfoot>
+    </table>
 
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<script>
-$(document).ready(function() {
-    // Setup - add search boxes to footer
-    $('#caverTable tfoot th').each(function () {
-        var title = $(this).text();
-        $(this).html('<input type="text" placeholder="' + title + '" />');
-    });
+    <script>
+    $(document).ready(function() {
+        // 1. Add individual search boxes to each footer cell
+        $('#caverTable tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Filter ' + title + '" />');
+        });
 
-    // Initialize DataTable
-    var table = $('#caverTable').DataTable({
-        "ajax": {
-            "url": "caves_data.json",
-            "dataSrc": ""  // CRITICAL: Tells DataTables the data is a simple list [] not a {"data":[]} object
-        },
-        "pageLength": -1,
-        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-        "order": [[5, "desc"]],
-        "columns": [
-            { "data": "type" },
-            { "data": "cave_name" },
-            { "data": "country" },
-            { "data": "state" },
-            { "data": "county" },
-            { "data": "length_meters" },
-            { "data": "depth_meters" },
-            { "data": "source" },
-            { "data": "date" },
-            { "data": "comment" }
-        ]
-    });
-
-    // Search logic
-    table.columns().every(function () {
-        var that = this;
-        $('input', this.footer()).on('keyup change clear', function () {
-            if (that.search() !== this.value) {
-                that.search(this.value).draw();
+        // 2. Initialize DataTable with Wrapped JSON support
+        var table = $('#caverTable').DataTable({
+            "ajax": {
+                "url": "caves_data.json",
+                "dataSrc": "data" // Specifically look for the "data" wrapper
+            },
+            "pageLength": -1, // Default to "All" records
+            "lengthMenu": [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, "All"]
+            ],
+            "order": [[5, "desc"]], // Sort by Length (column 6) descending
+            "columns": [
+                { "data": "type" },
+                { "data": "cave_name" },
+                { "data": "country" },
+                { "data": "state" },
+                { "data": "county" },
+                { "data": "length_meters" },
+                { "data": "depth_meters" },
+                { "data": "source" },
+                { "data": "date" },
+                { "data": "comment" }
+            ],
+            "columnDefs": [
+                { "targets": "_all", "className": "dt-nowrap" }
+            ],
+            "language": {
+                "search": "Global Search:",
+                "loadingRecords": "Loading cave data from JSON file..."
             }
         });
+
+        // 3. Apply the footer search logic
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change clear', function () {
+                if (that.search() !== this.value) {
+                    that.search(this.value).draw();
+                }
+            });
+        });
     });
-});
-</script>
+    </script>
 </body>
 </html>
