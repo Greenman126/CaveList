@@ -147,29 +147,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function sortData(column, direction) {
-        currentData.sort((a, b) => {
-            // Active class
-            sortableHeaders.forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
-            const activeHeader = document.querySelector(`th[data-sort="${column}"]`);
-            if (activeHeader) {
-                activeHeader.classList.add(direction === 1 ? 'sort-asc' : 'sort-desc');
-            }
-            // Rest of sorting logic
-            let valA, valB;
-            if (column === 'name') { valA = (a.cave_name || '').toLowerCase(); valB = (b.cave_name || '').toLowerCase(); }
-            else if (column === 'country') { valA = (a.country || '').toLowerCase(); valB = (b.country || '').toLowerCase(); }
-            else if (column === 'state') { valA = (a.state || '').toLowerCase(); valB = (b.state || '').toLowerCase(); }
-            else if (column === 'county') { valA = (a.county || '').toLowerCase(); valB = (b.county || '').toLowerCase(); }
-            else if (column === 'type') { valA = (a.type || '').toLowerCase(); valB = (b.type || '').toLowerCase(); }
-            else if (column === 'length') { valA = parseFloat(a.length_meters) || 0; valB = parseFloat(b.length_meters) || 0; }
-            else if (column === 'depth') { valA = parseFloat(a.depth_meters) || 0; valB = parseFloat(b.depth_meters) || 0; }
-            
-            if (valA < valB) return -1 * direction;
-            if (valA > valB) return 1 * direction;
-            return 0;
-        });
-        renderTable(currentData);
-    }
+    currentData.sort((a, b) => {
+        // Active class UI logic
+        sortableHeaders.forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+        const activeHeader = document.querySelector(`th[data-sort="${column}"]`);
+        if (activeHeader) {
+            activeHeader.classList.add(direction === 1 ? 'sort-asc' : 'sort-desc');
+        }
+
+        let valA, valB;
+        
+        // Handle Numeric Columns
+        if (column === 'length') {
+            valA = parseFloat(a.length_meters) || 0;
+            valB = parseFloat(b.length_meters) || 0;
+            return (valA - valB) * direction;
+        } 
+        else if (column === 'depth') {
+            valA = parseFloat(a.depth_meters) || 0;
+            valB = parseFloat(b.depth_meters) || 0;
+            return (valA - valB) * direction;
+        } 
+
+        // Handle String Columns with localeCompare
+        const stringColumns = {
+            name: 'cave_name',
+            country: 'country',
+            state: 'state',
+            county: 'county',
+            type: 'type'
+        };
+
+        const field = stringColumns[column];
+        valA = (a[field] || '').toLowerCase();
+        valB = (b[field] || '').toLowerCase();
+
+        // sensitivity: 'accent' ensures Š is treated as S, 
+        // but you can leave it default for standard dictionary sorting.
+        return valA.localeCompare(valB, undefined, { sensitivity: 'accent' }) * direction;
+    });
+
+    renderTable(currentData);
+}
 
     const searchInput = document.getElementById('searchInput');
 
