@@ -1,222 +1,229 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Elements ---
     const tableBody = document.getElementById('tableBody');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const sortableHeaders = document.querySelectorAll('.sortable');
-    
+    const unitToggleBtn = document.getElementById('unitToggleBtn');
+    const searchInput = document.getElementById('searchInput');
     const longestCavesBtn = document.getElementById('longestCavesBtn');
     const deepestCavesBtn = document.getElementById('deepestCavesBtn');
-    
+    // NEW Elements
+    const perPageSelect = document.getElementById('perPageSelect');
+    const paginationControls = document.getElementById('paginationControls');
+
+    // --- State Management ---
     let allCaves = [];
-    let currentData = []; 
+    let state = {
+        searchTerm: '',
+        activeFilter: 'all', // Lowercase to fix the 'All' bug!
+        sortColumn: 'length',
+        sortDirection: -1,
+        rankColumn: 'length',
+        isMetric: true,
+        currentPage: 1,      // NEW
+        itemsPerPage: 100    // NEW
+    };
 
-    // Default sorting/ranking state
-    let currentSortColumn = 'length';
-    let currentSortDirection = -1; 
-    let isMetric = true; 
+    // --- Helpers ---
+    const normalize = (str) => 
+        (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-    const unitToggleBtn = document.getElementById('unitToggleBtn');
+    const parseNum = (val) => {
+        const n = parseFloat(val);
+        return isNaN(n) ? -Infinity : n;
+    };
 
-    unitToggleBtn.addEventListener('click', () => {
-        isMetric = !isMetric;
-        unitToggleBtn.textContent = isMetric ? 'Switch to Imperial (mi/ft)' : 'Switch to Metric (m)';
-        renderTable(currentData); 
-    });
+    // --- Core Logic ---
 
-    // FIX: This establishes the # column based on the CURRENT filter
-    function applyRankings(dataArray, type = 'length') {
-        const metric = (type === 'depth') ? 'depth_meters' : 'length_meters';
-
-        // 1. Sort the data by the chosen metric descending to determine rank
-        dataArray.sort((a, b) => (parseFloat(b[metric]) || 0) - (parseFloat(a[metric]) || 0));
-
-        // 2. Assign the rank property based on that sorted position
-        dataArray.forEach((cave, index) => {
-            cave.rank = index + 1;
+    const processData = () => {
+        // STEP 1: Type/Category Filter
+        let pipelineData = allCaves.filter(cave => {
+            const caveType = (cave.type || '').toLowerCase();
+            return state.activeFilter === 'all' || 
+                (state.activeFilter === 'limestone' ? (!caveType || caveType === 'limestone') : caveType === state.activeFilter);
         });
-    }
-    
-    fetch('caves_data.json')
-    .then(response => response.json())
-    .then(jsonResponse => {
-        allCaves = jsonResponse.data;
-        currentData = [...allCaves];
-        
-        // Initial setup: Rank by length and show
-        applyRankings(currentData, 'length');
-        sortData('length', -1);
-    })
-    .catch(error => console.error('Error loading cave data:', error));
 
-    function renderTable(dataArray) {
-        tableBody.innerHTML = ''; 
+        // STEP 2: Rank the dataset
+        const rankKey = state.rankColumn === 'length' ? 'length_meters' : 'depth_meters';
+        pipelineData.sort((a, b) => parseNum(b[rankKey]) - parseNum(a[rankKey]));
+        pipelineData.forEach((cave, index) => cave.rank = index + 1);
 
-        if (dataArray.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No caves match these criteria.</td></tr>';
-            return;
-        }
-        
-        dataArray.forEach((cave) => {
-            const row = document.createElement('tr');
-            
-            let lengthDisplay = 'N/A';
-            let depthDisplay = 'N/A';
-
-            if (cave.length_meters) {
-                const meters = parseFloat(cave.length_meters);
-                lengthDisplay = isMetric 
-                    ? `${meters.toLocaleString()} m` 
-                    : `${(meters * 0.000621371).toFixed(2)} mi`;
-            }
-
-            if (cave.depth_meters) {
-                const meters = parseFloat(cave.depth_meters);
-                depthDisplay = isMetric 
-                    ? `${meters.toLocaleString()} m` 
-                    : `${Math.round(meters * 3.28084).toLocaleString()} ft`;
-            }
-            
-            row.innerHTML = `
-                <td>${cave.rank || ''}</td>
-                <td>${cave.cave_name || 'N/A'}</td>
-                <td>${cave.country || 'N/A'}</td>
-                <td>${cave.state || 'N/A'}</td>
-                <td>${cave.county || 'N/A'}</td> 
-                <td>${lengthDisplay}</td>
-                <td>${depthDisplay}</td>
-                <td>${cave.type || '-'}</td>
-                <td>${cave.source || 'N/A'}</td>
-                <td>${cave.date || 'N/A'}</td>
-                <td>${cave.comment || ''}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-    }
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-
-            const caveType = e.target.getAttribute('data-type');
-
-            if (caveType === 'All') {
-                currentData = [...allCaves];
-            } else if (caveType === 'limestone') {
-                currentData = allCaves.filter(cave => !cave.type || cave.type.trim() === "" || cave.type.toLowerCase() === "limestone");
-            } else {
-                currentData = allCaves.filter(cave => 
-                    cave.type && cave.type.toLowerCase() === caveType.toLowerCase()
+        // STEP 3: Search Filter
+        if (state.searchTerm) {
+            pipelineData = pipelineData.filter(cave => {
+                return [cave.cave_name, cave.country, cave.state].some(field => 
+                    normalize(field).includes(state.searchTerm)
                 );
+            });
+        }
+
+        // STEP 4: User UI Sort
+        const mapping = { name: 'cave_name', length: 'length_meters', depth: 'depth_meters' };
+        const sortKey = mapping[state.sortColumn] || state.sortColumn;
+
+        pipelineData.sort((a, b) => {
+            const valA = a[sortKey];
+            const valB = b[sortKey];
+
+            if (state.sortColumn === 'length' || state.sortColumn === 'depth') {
+                return (parseNum(valA) - parseNum(valB)) * state.sortDirection;
             }
-            
-            // Re-apply rankings to the NEW filtered set based on current preference
-            applyRankings(currentData, currentSortColumn === 'depth' ? 'depth' : 'length');
-            renderTable(currentData);
+            return String(valA || '').localeCompare(String(valB || ''), undefined, { sensitivity: 'accent' }) * state.sortDirection;
+        });
+
+        // STEP 5: Pagination (NEW)
+        const totalItems = pipelineData.length;
+        let totalPages = state.itemsPerPage === 'all' ? 1 : Math.ceil(totalItems / state.itemsPerPage);
+        
+        // Safety check if current page exceeds total pages after filtering
+        if (state.currentPage > totalPages && totalPages > 0) {
+            state.currentPage = totalPages;
+        }
+
+        let paginatedData = pipelineData;
+        if (state.itemsPerPage !== 'all') {
+            const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+            const endIndex = startIndex + state.itemsPerPage;
+            paginatedData = pipelineData.slice(startIndex, endIndex);
+        }
+
+        // STEP 6: Render
+        render(paginatedData);
+        renderPagination(totalItems, totalPages); // NEW
+    };
+
+    const render = (data) => {
+        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="11" style="text-align:center;">No matching caves found.</td></tr>';
+        
+        data.forEach(cave => {
+            const mLen = parseFloat(cave.length_meters);
+            const mDep = parseFloat(cave.depth_meters);
+
+            const lenDisp = mLen ? (state.isMetric ? `${mLen.toLocaleString()} m` : `${(mLen * 0.000621371).toFixed(2)} mi`) : 'N/A';
+            const depDisp = mDep ? (state.isMetric ? `${mDep.toLocaleString()} m` : `${Math.round(mDep * 3.28084).toLocaleString()} ft`) : 'N/A';
+
+            const row = `
+                <tr>
+                    <td>${cave.rank}</td>
+                    <td>${cave.cave_name || 'N/A'}</td>
+                    <td>${cave.country || 'N/A'}</td>
+                    <td>${cave.state || 'N/A'}</td>
+                    <td>${cave.county || 'N/A'}</td> 
+                    <td>${lenDisp}</td>
+                    <td>${depDisp}</td>
+                    <td>${cave.type || '-'}</td>
+                    <td>${cave.source || 'N/A'}</td>
+                    <td>${cave.date || 'N/A'}</td>
+                    <td>${cave.comment || ''}</td>
+                </tr>`;
+            tableBody.insertAdjacentHTML('beforeend', row);
+        });
+    };
+
+    // NEW: Render Pagination Controls
+    const renderPagination = (totalItems, totalPages) => {
+        paginationControls.innerHTML = '';
+        
+        if (totalItems === 0 || totalPages <= 1) return;
+
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = 'Previous';
+        prevBtn.className = 'page-btn';
+        prevBtn.disabled = state.currentPage === 1;
+        prevBtn.addEventListener('click', () => {
+            state.currentPage--;
+            processData();
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Optional: scroll to top
+        });
+        paginationControls.appendChild(prevBtn);
+
+        const pageInfo = document.createElement('span');
+        pageInfo.className = 'page-info';
+        pageInfo.textContent = `Page ${state.currentPage} of ${totalPages}`;
+        paginationControls.appendChild(pageInfo);
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Next';
+        nextBtn.className = 'page-btn';
+        nextBtn.disabled = state.currentPage === totalPages;
+        nextBtn.addEventListener('click', () => {
+            state.currentPage++;
+            processData();
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Optional: scroll to top
+        });
+        paginationControls.appendChild(nextBtn);
+    };
+
+    // --- Event Handlers ---
+
+    fetch('caves_data.json')
+        .then(res => res.json())
+        .then(json => {
+            allCaves = json.data;
+            processData();
+        })
+        .catch(err => console.error('Error loading cave data:', err));
+
+    // NEW: Items per page selector listener
+    perPageSelect?.addEventListener('change', (e) => {
+        const val = e.target.value;
+        state.itemsPerPage = val === 'all' ? 'all' : parseInt(val, 10);
+        state.currentPage = 1; // Reset to page 1 on change
+        processData();
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+        state.searchTerm = normalize(e.target.value);
+        state.currentPage = 1; // Reset page on search
+        processData();
+    });
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.activeFilter = btn.getAttribute('data-type').toLowerCase();
+            state.currentPage = 1; // Reset page on filter change
+            processData();
         });
     });
+
+    const updateSortUI = (column) => {
+        sortableHeaders.forEach(h => {
+            h.classList.remove('sort-asc', 'sort-desc');
+            if (h.getAttribute('data-sort') === column) {
+                h.classList.add(state.sortDirection === 1 ? 'sort-asc' : 'sort-desc');
+            }
+        });
+    };
 
     sortableHeaders.forEach(header => {
         header.addEventListener('click', () => {
-            const sortColumn = header.getAttribute('data-sort');
-            if (currentSortColumn === sortColumn) {
-                currentSortDirection *= -1; 
-            } else {
-                currentSortColumn = sortColumn;
-                currentSortDirection = 1;
-            }
-            sortData(currentSortColumn, currentSortDirection);
+            const col = header.getAttribute('data-sort');
+            state.sortDirection = (state.sortColumn === col) ? state.sortDirection * -1 : 1;
+            state.sortColumn = col;
+            state.currentPage = 1; // Reset page on sort
+            updateSortUI(col);
+            processData();
         });
     });
 
-    if (longestCavesBtn) {
-        longestCavesBtn.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            currentSortColumn = 'length';
-            applyRankings(currentData, 'length'); // Rank by Length
-            sortData('length', -1);
+    [longestCavesBtn, deepestCavesBtn].forEach(btn => {
+        btn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const metric = btn === longestCavesBtn ? 'length' : 'depth';
+            state.sortColumn = metric;
+            state.sortDirection = -1;
+            state.rankColumn = metric;
+            state.currentPage = 1; // Reset page
+            updateSortUI(state.sortColumn);
+            processData();
         });
-    }
-
-    if (deepestCavesBtn) {
-        deepestCavesBtn.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            currentSortColumn = 'depth';
-            applyRankings(currentData, 'depth'); // Rank by Depth
-            sortData('depth', -1);
-        });
-    }
-
-    function sortData(column, direction) {
-    currentData.sort((a, b) => {
-        // Active class UI logic
-        sortableHeaders.forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
-        const activeHeader = document.querySelector(`th[data-sort="${column}"]`);
-        if (activeHeader) {
-            activeHeader.classList.add(direction === 1 ? 'sort-asc' : 'sort-desc');
-        }
-
-        let valA, valB;
-        
-        // Handle Numeric Columns
-        if (column === 'length') {
-            valA = parseFloat(a.length_meters) || 0;
-            valB = parseFloat(b.length_meters) || 0;
-            return (valA - valB) * direction;
-        } 
-        else if (column === 'depth') {
-            valA = parseFloat(a.depth_meters) || 0;
-            valB = parseFloat(b.depth_meters) || 0;
-            return (valA - valB) * direction;
-        } 
-
-        // Handle String Columns with localeCompare
-        const stringColumns = {
-            name: 'cave_name',
-            country: 'country',
-            state: 'state',
-            county: 'county',
-            type: 'type'
-        };
-
-        const field = stringColumns[column];
-        valA = (a[field] || '').toLowerCase();
-        valB = (b[field] || '').toLowerCase();
-
-        // sensitivity: 'accent' ensures Š is treated as S, 
-        // but you can leave it default for standard dictionary sorting.
-        return valA.localeCompare(valB, undefined, { sensitivity: 'accent' }) * direction;
     });
 
-    renderTable(currentData);
-}
-
-    const searchInput = document.getElementById('searchInput');
-    // search listener
-    if (searchInput) {
-         searchInput.addEventListener('input', (e) => {
-        // Normalize the search term: lowercase and remove accents
-        const term = e.target.value
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-        
-        const filtered = currentData.filter(cave => {
-            // Helper to normalize cave data fields for comparison
-            const prepare = (str) => (str || '')
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
-
-            const name = prepare(cave.cave_name);
-            const country = prepare(cave.country);
-            const state = prepare(cave.state); 
-            
-            return name.includes(term) || country.includes(term) || state.includes(term);
-        });
-        
-        renderTable(filtered);
+    unitToggleBtn.addEventListener('click', () => {
+        state.isMetric = !state.isMetric;
+        unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (mi/ft)' : 'Switch to Metric (m)';
+        processData();
     });
-}
-
-
 });

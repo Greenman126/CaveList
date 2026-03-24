@@ -5,16 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worldwide Cave Rankings</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* A little CSS to make it obvious the headers are clickable */
-        th.sortable {
-            cursor: pointer;
-            user-select: none;
-        }
-        th.sortable:hover {
-            background-color: #e0e0e0;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -27,22 +17,35 @@
         </nav>
     </header>
 
-    <main>
+    <main class="container">
         <section class="filters">
-            <span>Filter by Type:</span>
-            <button class="filter-btn active" data-type="All">All</button>
-            <button class="filter-btn" data-type="limestone">Limestone</button>
-            <button class="filter-btn" data-type="gypsum">Gypsum</button>
-            <button class="filter-btn" data-type="lava">Lava</button>
-            <button class="filter-btn" data-type="underwater">Underwater</button>
-            <button class="filter-btn" data-type="salt">Salt</button>
-            <button class="filter-btn" data-type="sandstone_quartzite">Sandstone/Quartzite</button>
-            <button class="filter-btn" data-type="piping">Piping</button>
+            <div class="filter-group">
+                <span>Filter by Type:</span>
+                <button class="filter-btn active" data-type="All">All</button>
+                <button class="filter-btn" data-type="limestone">Limestone</button>
+                <button class="filter-btn" data-type="gypsum">Gypsum</button>
+                <button class="filter-btn" data-type="lava">Lava</button>
+                <button class="filter-btn" data-type="underwater">Underwater</button>
+                <button class="filter-btn" data-type="salt">Salt</button>
+                <button class="filter-btn" data-type="sandstone_quartzite">Sandstone/Quartzite</button>
+                <button class="filter-btn" data-type="piping">Piping</button>
+            </div>
 
-            <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <button id="unitToggleBtn" class="filter-btn">Switch to Imperial (mi/ft)</button>
+            <div class="top-controls">
+                <input type="text" id="searchInput" placeholder="Search caves...">
+                
+                <button id="unitToggleBtn" class="secondary-btn">Switch to Imperial (mi/ft)</button>
 
+                <div class="entries-control">
+                    <label for="perPageSelect">Entries per page:</label>
+                    <select id="perPageSelect">
+                        <option value="100" selected>100</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
         </section>
 
         <div class="table-container">
@@ -66,6 +69,8 @@
                     </tbody>
             </table>
         </div>
+
+        <div id="paginationControls" class="pagination-controls"></div>
     </main>
 
     <script src="script.js"></script>
