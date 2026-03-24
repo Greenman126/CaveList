@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${cave.county || 'N/A'}</td> 
                 <td>${lengthDisplay}</td>
                 <td>${depthDisplay}</td>
-                <td>${cave.type || 'N/A'}</td>
+                <td>${cave.type || '-'}</td>
                 <td>${cave.source || 'N/A'}</td>
                 <td>${cave.date || 'N/A'}</td>
                 <td>${cave.comment || ''}</td>
@@ -191,24 +191,32 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
     const searchInput = document.getElementById('searchInput');
-
-    //search listener
+    // search listener
     if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
+         searchInput.addEventListener('input', (e) => {
+        // Normalize the search term: lowercase and remove accents
+        const term = e.target.value
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+        
+        const filtered = currentData.filter(cave => {
+            // Helper to normalize cave data fields for comparison
+            const prepare = (str) => (str || '')
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+
+            const name = prepare(cave.cave_name);
+            const country = prepare(cave.country);
+            const state = prepare(cave.state); 
             
-            const filtered = currentData.filter(cave => {
-                // Use fallback empty strings in case a cave is missing a field
-                const name = (cave.cave_name || '').toLowerCase();
-                const country = (cave.country || '').toLowerCase();
-                const state = (cave.state || '').toLowerCase(); 
-                
-                return name.includes(term) || country.includes(term) || state.includes(term);
-            });
-            
-            renderTable(filtered);
+            return name.includes(term) || country.includes(term) || state.includes(term);
         });
-    }
+        
+        renderTable(filtered);
+    });
+}
 
 
 });
