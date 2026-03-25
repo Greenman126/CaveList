@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sortableHeaders = document.querySelectorAll('.sortable');
     const unitToggleBtn = document.getElementById('unitToggleBtn');
     const searchInput = document.getElementById('searchInput');
+    const stateFilter = document.getElementById('stateFilter');
     const filterBtns = document.querySelectorAll('.filter-btn');
     const perPageSelect = document.getElementById('perPageSelect');
     const paginationControls = document.getElementById('paginationControls');
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let state = {
         searchTerm: '',
         activeFilter: 'all',
+        activeState: 'all',
         sortColumn: 'depth',    // Change to 'depth' for usa_deepest_script.js
         sortDirection: -1,
         rankColumn: 'depth',    // Change to 'depth' for usa_deepest_script.js
@@ -35,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let pipelineData = allCaves.filter(cave => 
             cave.country === 'USA' || cave.country === 'United States'
         );
+
+        // 2. STATE FILTER (NEW)
+        if (state.activeState !== 'all') {
+            pipelineData = pipelineData.filter(cave => cave.state === state.activeState);
+        }
 
         // 2. TYPE FILTER
         if (state.activeFilter !== 'all') {
@@ -140,13 +147,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     };
 
-    fetch('caves_data.json').then(res => res.json()).then(json => {
-        allCaves = json.data; highlightActiveLink(); processData();
+fetch('caves_data.json').then(res => res.json()).then(json => {
+        allCaves = json.data; 
+        highlightActiveLink(); 
+
+        // --- NEW: Populate State Dropdown ---
+        const usaCaves = allCaves.filter(c => c.country === 'USA' || c.country === 'United States');
+        const uniqueStates = [...new Set(usaCaves.map(c => c.state).filter(Boolean))].sort();
+        
+        if (stateFilter) {
+            uniqueStates.forEach(st => {
+                const opt = document.createElement('option');
+                opt.value = st;
+                opt.textContent = st;
+                stateFilter.appendChild(opt);
+            });
+        }
+        // ------------------------------------
+
+        processData();
     }).catch(err => console.error('Error:', err));
 
     searchInput?.addEventListener('input', (e) => { state.searchTerm = normalize(e.target.value); state.currentPage = 1; processData(); });
     perPageSelect?.addEventListener('change', (e) => { state.itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value); state.currentPage = 1; processData(); });
-    
+    // Add this near your other event listeners
+    stateFilter?.addEventListener('change', (e) => {
+        state.activeState = e.target.value;
+        state.currentPage = 1; // Reset to page 1 on new filter
+        processData();
+    });
     unitToggleBtn?.addEventListener('click', () => {
         state.isMetric = !state.isMetric;
         unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (mi/ft)' : 'Switch to Metric (m)';

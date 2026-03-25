@@ -5,11 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const perPageSelect = document.getElementById('perPageSelect');
     const paginationControls = document.getElementById('paginationControls');
+    const stateFilter = document.getElementById('stateFilter'); // <--- ADD THIS
+
 
     let allPits = [];
     let state = {
         searchTerm: '',
         sortColumn: 'Meters',
+        activeState: 'all',
         sortDirection: -1,
         isMetric: true,
         currentPage: 1,      
@@ -32,6 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let pipelineData = allPits.filter(pit => 
             pit.Country === 'USA' || pit.Country === 'United States'
         );
+
+        // 2. STATE FILTER (NEW)
+        if (state.activeState !== 'all') {
+            pipelineData = pipelineData.filter(pit => pit.State === state.activeState);
+        }
 
         // 2. SEARCH FILTER
         if (state.searchTerm) {
@@ -121,13 +129,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     };
 
-    fetch('pits_data.json').then(res => res.json()).then(json => {
-        allPits = json.data; highlightActiveLink(); processData();
+fetch('pits_data.json').then(res => res.json()).then(json => {
+        allPits = json.data; 
+        highlightActiveLink(); 
+
+        // --- NEW: Populate State Dropdown ---
+        const usaPits = allPits.filter(p => p.Country === 'USA' || p.Country === 'United States');
+        const uniqueStates = [...new Set(usaPits.map(p => p.State).filter(Boolean))].sort();
+        
+        if (stateFilter) {
+            uniqueStates.forEach(st => {
+                const opt = document.createElement('option');
+                opt.value = st;
+                opt.textContent = st;
+                stateFilter.appendChild(opt);
+            });
+        }
+        // ------------------------------------
+
+        processData();
     }).catch(err => console.error('Error:', err));
 
     searchInput?.addEventListener('input', (e) => { state.searchTerm = normalize(e.target.value); state.currentPage = 1; processData(); });
     perPageSelect?.addEventListener('change', (e) => { state.itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value); state.currentPage = 1; processData(); });
-    
+    // Add this near your other event listeners
+    stateFilter?.addEventListener('change', (e) => {
+        state.activeState = e.target.value;
+        state.currentPage = 1; // Reset to page 1 on new filter
+        processData();
+    });
     unitToggleBtn?.addEventListener('click', () => {
         state.isMetric = !state.isMetric;
         unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (ft)' : 'Switch to Metric (m)';
