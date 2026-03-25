@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Elements ---
     const tableBody = document.getElementById('tableBody');
     const sortableHeaders = document.querySelectorAll('.sortable');
     const unitToggleBtn = document.getElementById('unitToggleBtn');
@@ -8,27 +7,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const perPageSelect = document.getElementById('perPageSelect');
     const paginationControls = document.getElementById('paginationControls');
 
-    // --- State Management ---
     let allCaves = [];
     let state = {
         searchTerm: '',
-        activeFilter: 'all',     // This matches the data-type="all" button
-        sortColumn: 'length',    
+        activeFilter: 'all',
+        sortColumn: 'depth',    // Change to 'depth' for usa_deepest_script.js
         sortDirection: -1,
-        rankColumn: 'length',    
+        rankColumn: 'depth',    // Change to 'depth' for usa_deepest_script.js
         isMetric: true,
         currentPage: 1,      
         itemsPerPage: 100    
     };
 
-    // --- Helpers ---
-    const normalize = (str) => 
-        (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-    const parseNum = (val) => {
-        const n = parseFloat(val);
-        return isNaN(n) ? -Infinity : n;
-    };
+    const normalize = (str) => (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const parseNum = (val) => { const n = parseFloat(val); return isNaN(n) ? -Infinity : n; };
 
     const highlightActiveLink = () => {
         let path = window.location.pathname;
@@ -38,41 +30,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- Core Logic ---
     const processData = () => {
-        // Start with all caves
-        let pipelineData = [...allCaves];
+        // --- 1. USA GATEKEEPER FILTER ---
+        let pipelineData = allCaves.filter(cave => 
+            cave.country === 'USA' || cave.country === 'United States'
+        );
 
-        // 1. TYPE FILTER (Fixed "All" logic)
+        // 2. TYPE FILTER
         if (state.activeFilter !== 'all') {
             pipelineData = pipelineData.filter(cave => {
                 const caveType = (cave.type || '').toLowerCase();
-                if (state.activeFilter === 'limestone') {
-                    // Limestone includes empty types per your previous requirement
-                    return !caveType || caveType === 'limestone';
-                }
+                if (state.activeFilter === 'limestone') return !caveType || caveType === 'limestone';
                 return caveType === state.activeFilter;
             });
         }
 
-        // 2. SEARCH FILTER
+        // 3. SEARCH FILTER
         if (state.searchTerm) {
             pipelineData = pipelineData.filter(cave => {
-                return [cave.cave_name, cave.country, cave.state, cave.county].some(field => 
+                return [cave.cave_name, cave.state, cave.county].some(field => 
                     normalize(field).includes(state.searchTerm)
                 );
             });
         }
 
-        // 3. DYNAMIC RANKING 
-        // We re-rank based on what is currently visible after filters/search
+        // 4. DYNAMIC RANKING (USA Specific)
         const rankKey = state.rankColumn === 'length' ? 'length_meters' : 'depth_meters';
         pipelineData.sort((a, b) => parseNum(b[rankKey]) - parseNum(a[rankKey]));
-        pipelineData.forEach((cave, index) => {
-            cave.rank = index + 1;
-        });
+        pipelineData.forEach((cave, index) => cave.rank = index + 1);
 
-        // 4. USER UI SORT (If user clicked a header like "Name" or "State")
+        // 5. USER UI SORT
         const mapping = { name: 'cave_name', length: 'length_meters', depth: 'depth_meters' };
         const sortKey = mapping[state.sortColumn] || state.sortColumn;
 
@@ -87,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 5. PAGINATION
+        // 6. PAGINATION
         const totalItems = pipelineData.length;
         let totalPages = state.itemsPerPage === 'all' ? 1 : Math.ceil(totalItems / state.itemsPerPage);
         if (state.currentPage > totalPages && totalPages > 0) state.currentPage = totalPages;
@@ -103,34 +90,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const render = (data) => {
-        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="11" style="text-align:center;">No matching caves found.</td></tr>';
+        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="9" style="text-align:center;">No matching USA caves found.</td></tr>';
         
         data.forEach(cave => {
             const mLen = parseFloat(cave.length_meters);
             const mDep = parseFloat(cave.depth_meters);
-
             const lenDisp = mLen ? (state.isMetric ? `${mLen.toLocaleString()} m` : `${(mLen * 0.000621371).toFixed(2)} mi`) : 'N/A';
             const depDisp = mDep ? (state.isMetric ? `${mDep.toLocaleString()} m` : `${Math.round(mDep * 3.28084).toLocaleString()} ft`) : 'N/A';
 
-            const row = `
-                <tr>
-                    <td><strong>${cave.rank}</strong></td>
-                    <td>${cave.cave_name || 'N/A'}</td>
-                    <td>${cave.country || 'N/A'}</td>
-                    <td>${cave.state || 'N/A'}</td>
-                    <td>${cave.county || 'N/A'}</td> 
-                    <td class="measure-cell ${state.rankColumn === 'length' ? 'primary-metric' : ''}">${lenDisp}</td>
-                    <td class="measure-cell ${state.rankColumn === 'depth' ? 'primary-metric' : ''}">${depDisp}</td>
-                    <td>${cave.type || '-'}</td>
-                    <td>${cave.source || 'N/A'}</td>
-                    <td>${cave.date || 'N/A'}</td>
-                    <td>${cave.comment || ''}</td>
-                </tr>`;
+            const row = `<tr>
+                <td><strong>${cave.rank}</strong></td>
+                <td>${cave.cave_name || 'N/A'}</td>
+                <td>${cave.state || 'N/A'}</td>
+                <td>${cave.county || 'N/A'}</td> 
+                <td class="measure-cell ${state.rankColumn === 'length' ? 'primary-metric' : ''}">${lenDisp}</td>
+                <td class="measure-cell ${state.rankColumn === 'depth' ? 'primary-metric' : ''}">${depDisp}</td>
+                <td>${cave.type || '-'}</td>
+                <td>${cave.source || 'N/A'}</td>
+                <td>${cave.date || 'N/A'}</td>
+            </tr>`;
             tableBody.insertAdjacentHTML('beforeend', row);
         });
     };
 
-    // --- Pagination, Fetch, and Listeners ---
     const renderPagination = (totalItems, totalPages) => {
         paginationControls.innerHTML = '';
         if (totalItems === 0 || totalPages <= 1) return;
@@ -145,9 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         paginationControls.appendChild(createBtn('Previous', state.currentPage === 1, () => {
-            state.currentPage--;
-            processData();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            state.currentPage--; processData(); window.scrollTo({ top: 0, behavior: 'smooth' });
         }));
 
         const info = document.createElement('span');
@@ -156,35 +136,28 @@ document.addEventListener('DOMContentLoaded', () => {
         paginationControls.appendChild(info);
 
         paginationControls.appendChild(createBtn('Next', state.currentPage === totalPages, () => {
-            state.currentPage++;
-            processData();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            state.currentPage++; processData(); window.scrollTo({ top: 0, behavior: 'smooth' });
         }));
     };
 
-    fetch('caves_data.json')
-        .then(res => res.json())
-        .then(json => {
-            allCaves = json.data;
-            highlightActiveLink();
-            processData();
-        })
-        .catch(err => console.error('Error:', err));
+    fetch('caves_data.json').then(res => res.json()).then(json => {
+        allCaves = json.data; highlightActiveLink(); processData();
+    }).catch(err => console.error('Error:', err));
 
-    searchInput.addEventListener('input', (e) => {
-        state.searchTerm = normalize(e.target.value);
-        state.currentPage = 1; 
+    searchInput?.addEventListener('input', (e) => { state.searchTerm = normalize(e.target.value); state.currentPage = 1; processData(); });
+    perPageSelect?.addEventListener('change', (e) => { state.itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value); state.currentPage = 1; processData(); });
+    
+    unitToggleBtn?.addEventListener('click', () => {
+        state.isMetric = !state.isMetric;
+        unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (mi/ft)' : 'Switch to Metric (m)';
         processData();
     });
 
-filterBtns.forEach(btn => {
+    filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // FIX: Force the attribute to lowercase so "All", "ALL", and "all" all work perfectly
-            state.activeFilter = (btn.getAttribute('data-type') || 'all').toLowerCase(); 
-            
+            state.activeFilter = (btn.getAttribute('data-type') || 'all').toLowerCase();
             state.currentPage = 1; 
             processData();
         });
@@ -196,22 +169,9 @@ filterBtns.forEach(btn => {
             state.sortDirection = (state.sortColumn === col) ? state.sortDirection * -1 : 1;
             state.sortColumn = col;
             state.currentPage = 1; 
-            // Update UI Arrows
             sortableHeaders.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
             header.classList.add(state.sortDirection === 1 ? 'sort-asc' : 'sort-desc');
             processData();
         });
-    });
-
-    unitToggleBtn.addEventListener('click', () => {
-        state.isMetric = !state.isMetric;
-        unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (mi/ft)' : 'Switch to Metric (m)';
-        processData();
-    });
-
-    perPageSelect.addEventListener('change', (e) => {
-        state.itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
-        state.currentPage = 1;
-        processData();
     });
 });

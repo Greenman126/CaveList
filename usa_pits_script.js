@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const perPageSelect = document.getElementById('perPageSelect');
     const paginationControls = document.getElementById('paginationControls');
 
-    let allChambers = [];
+    let allPits = [];
     let state = {
         searchTerm: '',
-        sortColumn: 'area_m2',
+        sortColumn: 'Meters',
         sortDirection: -1,
         isMetric: true,
         currentPage: 1,      
@@ -28,22 +28,26 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const processData = () => {
-        let pipelineData = [...allChambers];
+        // 1. USA FILTER
+        let pipelineData = allPits.filter(pit => 
+            pit.Country === 'USA' || pit.Country === 'United States'
+        );
 
+        // 2. SEARCH FILTER
         if (state.searchTerm) {
-            pipelineData = pipelineData.filter(chamber => {
-                return [chamber.cave_name, chamber.country].some(field => 
+            pipelineData = pipelineData.filter(pit => {
+                return [pit.Cave, pit.Name, pit.State, pit.County].some(field => 
                     normalize(field).includes(state.searchTerm)
                 );
             });
         }
 
-        // DYNAMIC RANKING (Sort by Area)
-        pipelineData.sort((a, b) => parseNum(b.area_m2) - parseNum(a.area_m2));
-        pipelineData.forEach((chamber, index) => chamber.rank = index + 1);
+        // 3. DYNAMIC RANKING (Sort by Depth)
+        pipelineData.sort((a, b) => parseNum(b.Meters) - parseNum(a.Meters));
+        pipelineData.forEach((pit, index) => pit.rank = index + 1);
 
-        // USER UI SORT
-        if (state.sortColumn !== 'area_m2') {
+        // 4. USER UI SORT
+        if (state.sortColumn !== 'Meters') {
             pipelineData.sort((a, b) => {
                 const valA = a[state.sortColumn];
                 const valB = b[state.sortColumn];
@@ -54,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // 5. PAGINATION
         const totalItems = pipelineData.length;
         let totalPages = state.itemsPerPage === 'all' ? 1 : Math.ceil(totalItems / state.itemsPerPage);
         if (state.currentPage > totalPages && totalPages > 0) state.currentPage = totalPages;
@@ -69,27 +74,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const render = (data) => {
-        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="9" style="text-align:center;">No matching chambers found.</td></tr>';
+        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="8" style="text-align:center;">No matching USA pits found.</td></tr>';
         
-        data.forEach(chamber => {
-            const mArea = parseFloat(chamber.area_m2);
-            const mVol = parseFloat(chamber.volume_million_m3);
-            const mHeight = parseFloat(chamber.height_m);
-
-            // Metric/Imperial Math for Area, Volume, Height
-            const areaDisp = mArea ? (state.isMetric ? `${mArea.toLocaleString()} m²` : `${Math.round(mArea * 10.7639).toLocaleString()} ft²`) : 'N/A';
-            const volDisp = mVol ? (state.isMetric ? `${mVol.toLocaleString()} M m³` : `${(mVol * 35.3147).toFixed(1)} M ft³`) : 'N/A';
-            const heightDisp = mHeight ? (state.isMetric ? `${mHeight.toLocaleString()} m` : `${Math.round(mHeight * 3.28084).toLocaleString()} ft`) : 'N/A';
+        data.forEach(pit => {
+            const mDep = parseFloat(pit.Meters);
+            const depDisp = mDep ? (state.isMetric ? `${mDep.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})} m` : `${Math.round(mDep * 3.28084).toLocaleString()} ft`) : 'N/A';
 
             const row = `<tr>
-                <td><strong>${chamber.rank}</strong></td>
-                <td>${chamber.cave_name || 'N/A'}</td>
-                <td>${chamber.country || 'N/A'}</td>
-                <td class="measure-cell primary-metric">${areaDisp}</td>
-                <td class="measure-cell">${volDisp}</td>
-                <td class="measure-cell">${heightDisp}</td>
-                <td>${chamber.dimensions_str || '-'}</td> <td>${chamber.data_type || '-'}</td>
-                <td>${chamber.source || 'N/A'}</td>
+                <td><strong>${pit.rank}</strong></td>
+                <td>${pit.Cave || 'N/A'}</td>
+                <td>${pit.Name || '-'}</td>
+                <td class="measure-cell primary-metric">${depDisp}</td>
+                <td>${pit.State || 'N/A'}</td>
+                <td>${pit.County || 'N/A'}</td> 
+                <td>${pit.Freefall || '-'}</td>
+                <td>${pit.Source || 'N/A'}</td>
             </tr>`;
             tableBody.insertAdjacentHTML('beforeend', row);
         });
@@ -122,8 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     };
 
-    fetch('chambers_data.json').then(res => res.json()).then(json => {
-        allChambers = json.data; highlightActiveLink(); processData();
+    fetch('pits_data.json').then(res => res.json()).then(json => {
+        allPits = json.data; highlightActiveLink(); processData();
     }).catch(err => console.error('Error:', err));
 
     searchInput?.addEventListener('input', (e) => { state.searchTerm = normalize(e.target.value); state.currentPage = 1; processData(); });
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     unitToggleBtn?.addEventListener('click', () => {
         state.isMetric = !state.isMetric;
-        unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (ft/ft²)' : 'Switch to Metric (m/m²)';
+        unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (ft)' : 'Switch to Metric (m)';
         processData();
     });
 

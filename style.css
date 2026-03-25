@@ -243,3 +243,124 @@ th.sortable:not(.sort-asc):not(.sort-desc)::after {
     font-weight: 600;
     color: #222;
 }
+
+/* Header and Nav Styling */
+header {
+    background-color: var(--nss-maroon);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.main-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.nav-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.nav-label {
+    font-weight: bold;
+    color: var(--nss-gold);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+header nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+header nav a.active {
+    background-color: var(--nss-gold);
+    color: var(--nss-maroon);
+    font-weight: bold;
+}
+
+header {
+    background-color: var(--nss-maroon);
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.page-title {
+    color: white;
+    margin: 0 0 20px 0;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+}
+
+.site-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.nav-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.group-label {
+    color: var(--nss-gold);
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Subtle white border */
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8); /* Brighter border on hover */
+}
+
+.nav-link.active {
+    background-color: var(--nss-gold);
+    color: var(--nss-maroon);
+    font-weight: bold;
+    border: 1px solid var(--nss-gold); /* Gold border to match background */
+}
+
+.nav-separator {
+    width: 2px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .nav-separator { display: none; }
+    .site-navigation { gap: 15px; }
+}

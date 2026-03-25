@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worldwide Cave Rankings - Largest Chambers</title>
+    <title>USA Cave Rankings - Deepest Caves</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<header>
-    <h1 class="page-title">Worldwide Cave Rankings - Largest Chambers</h1>
+<body class="depth-page">
+    <header>
+    <h1 class="page-title">USA Cave Rankings - Deepest Caves</h1>
     <nav class="site-navigation">
         <div class="nav-group">
             <span class="group-label">Worldwide:</span>
@@ -30,18 +30,8 @@
     <main class="container">
         <section class="filters">
             <div class="top-controls">
-                <input type="text" id="searchInput" placeholder="Search chambers or countries...">
-                
-                <button id="unitToggleBtn" class="secondary-btn">Switch to Imperial (ft/ft²)</button>
-
-                <div class="entries-control">
-                    <label for="perPageSelect">Entries per page:</label>
-                    <select id="perPageSelect">
-                        <option value="100" selected>100</option>
-                        <option value="500">500</option>
-                        <option value="all">All</option>
-                    </select>
-                </div>
+                <input type="text" id="searchInput" placeholder="Search USA caves...">
+                <button id="unitToggleBtn" class="secondary-btn">Switch to Imperial (mi/ft)</button>
             </div>
         </section>
 
@@ -49,23 +39,22 @@
             <table id="caveTable">
                 <thead>
                     <tr>
-                        <th># Rank</th> <th class="sortable" data-sort="cave_name">Chamber Name</th>
-                        <th class="sortable" data-sort="country">Country</th>
-                        <th class="sortable" data-sort="area_m2">Area</th>
-                        <th class="sortable" data-sort="volume_million_m3">Volume</th>
-                        <th class="sortable" data-sort="height_m">Height</th>
-                        <th>Dimensions (L x W x H)</th>
-                        <th class="sortable" data-sort="data_type">Rank Type</th>
+                        <th># Rank</th>
+                        <th class="sortable" data-sort="name">Cave Name ↕</th>
+                        <th class="sortable" data-sort="state">State ↕</th>
+                        <th class="sortable" data-sort="county">County ↕</th>
+                        <th class="sortable" data-sort="length">Length ↕</th>
+                        <th class="sortable" data-sort="depth">Depth ↕</th>
+                        <th class="sortable" data-sort="type">Type ↕</th>
                         <th>Source</th>
+                        <th class="sortable" data-sort="date">Updated ↕</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
-
         <div id="paginationControls" class="pagination-controls"></div>
     </main>
-
-    <script src="chambers_script.js"></script>
+    <script src="usa_deepest_script.js"></script>
 </body>
 </html>

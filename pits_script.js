@@ -27,17 +27,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return isNaN(n) ? -Infinity : n;
     };
 
+    const highlightActiveLink = () => {
+        let path = window.location.pathname;
+        let page = path.split("/").pop() || "index.html";
+        document.querySelectorAll('header nav a').forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === page);
+        });
+    };
+
     // --- Core Logic ---
     const processData = () => {
+        // Start with a fresh copy
         let pipelineData = [...allPits];
 
+        // 1. DEPTH GATEKEEPER
+        // Only show pits deeper than 250m for the worldwide list
         pipelineData = pipelineData.filter(pit => {
             const depth = parseNum(pit.Meters);
             return depth >= 250;
         });
 
-
-        // STEP 1: Search Filter
+        // 2. SEARCH FILTER
         if (state.searchTerm) {
             pipelineData = pipelineData.filter(pit => {
                 return [pit.Cave, pit.Name, pit.Country, pit.State, pit.County].some(field => 
@@ -46,41 +56,35 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // STEP 2: Calculate Global Rank based strictly on Meters (Depth)
-        // (Because the raw JSON data has US pits and Global pits separated)
-        const rankedData = [...allPits].sort((a, b) => parseNum(b.Meters) - parseNum(a.Meters));
-        const rankMap = new Map();
-        rankedData.forEach((pit, index) => rankMap.set(pit.Cave + pit.Name, index + 1));
-        
-        pipelineData.forEach(pit => pit.rank = rankMap.get(pit.Cave + pit.Name));
-
-        // STEP 3: User UI Sort
-        pipelineData.sort((a, b) => {
-            const valA = a[state.sortColumn];
-            const valB = b[state.sortColumn];
-
-            if (state.sortColumn === 'Meters') {
-                return (parseNum(valA) - parseNum(valB)) * state.sortDirection;
-            }
-            return String(valA || '').localeCompare(String(valB || ''), undefined, { sensitivity: 'accent' }) * state.sortDirection;
+        // 3. DYNAMIC RANKING 
+        pipelineData.sort((a, b) => parseNum(b.Meters) - parseNum(a.Meters));
+        pipelineData.forEach((pit, index) => {
+            pit.rank = index + 1;
         });
 
-        // STEP 4: Pagination
+        // 4. USER UI SORT
+        if (state.sortColumn !== 'Meters') {
+            pipelineData.sort((a, b) => {
+                const valA = a[state.sortColumn];
+                const valB = b[state.sortColumn];
+                if (typeof valA === 'number' || !isNaN(parseFloat(valA))) {
+                    return (parseNum(valA) - parseNum(valB)) * state.sortDirection;
+                }
+                return String(valA || '').localeCompare(String(valB || ''), undefined, { sensitivity: 'accent' }) * state.sortDirection;
+            });
+        }
+
+        // 5. PAGINATION
         const totalItems = pipelineData.length;
         let totalPages = state.itemsPerPage === 'all' ? 1 : Math.ceil(totalItems / state.itemsPerPage);
-        
-        if (state.currentPage > totalPages && totalPages > 0) {
-            state.currentPage = totalPages;
-        }
+        if (state.currentPage > totalPages && totalPages > 0) state.currentPage = totalPages;
 
         let paginatedData = pipelineData;
         if (state.itemsPerPage !== 'all') {
             const startIndex = (state.currentPage - 1) * state.itemsPerPage;
-            const endIndex = startIndex + state.itemsPerPage;
-            paginatedData = pipelineData.slice(startIndex, endIndex);
+            paginatedData = pipelineData.slice(startIndex, startIndex + state.itemsPerPage);
         }
 
-        // STEP 5: Render
         render(paginatedData);
         renderPagination(totalItems, totalPages);
     };
@@ -99,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td><strong>${pit.rank || '-'}</strong></td>
                     <td>${pit.Cave || 'N/A'}</td>
                     <td>${pit.Name || '-'}</td>
-                    <td>${depDisp}</td>
+                    <td class="measure-cell primary-metric">${depDisp}</td>
                     <td>${pit.Country || 'N/A'}</td>
                     <td>${pit.State || 'N/A'}</td>
                     <td>${pit.County || 'N/A'}</td> 
@@ -112,53 +116,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Render Pagination Controls
+    // --- Listeners & Initialization ---
     const renderPagination = (totalItems, totalPages) => {
         paginationControls.innerHTML = '';
-        
         if (totalItems === 0 || totalPages <= 1) return;
 
-        const prevBtn = document.createElement('button');
-        prevBtn.textContent = 'Previous';
-        prevBtn.className = 'page-btn';
-        prevBtn.disabled = state.currentPage === 1;
-        prevBtn.addEventListener('click', () => {
-            state.currentPage--;
-            processData();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        paginationControls.appendChild(prevBtn);
+        const createBtn = (text, disabled, onClick) => {
+            const btn = document.createElement('button');
+            btn.textContent = text;
+            btn.className = 'page-btn';
+            btn.disabled = disabled;
+            btn.addEventListener('click', onClick);
+            return btn;
+        };
 
-        const pageInfo = document.createElement('span');
-        pageInfo.className = 'page-info';
-        pageInfo.textContent = `Page ${state.currentPage} of ${totalPages}`;
-        paginationControls.appendChild(pageInfo);
+        paginationControls.appendChild(createBtn('Previous', state.currentPage === 1, () => {
+            state.currentPage--; processData(); window.scrollTo({ top: 0, behavior: 'smooth' });
+        }));
 
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = 'Next';
-        nextBtn.className = 'page-btn';
-        nextBtn.disabled = state.currentPage === totalPages;
-        nextBtn.addEventListener('click', () => {
-            state.currentPage++;
-            processData();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        paginationControls.appendChild(nextBtn);
+        const info = document.createElement('span');
+        info.className = 'page-info';
+        info.textContent = `Page ${state.currentPage} of ${totalPages}`;
+        paginationControls.appendChild(info);
+
+        paginationControls.appendChild(createBtn('Next', state.currentPage === totalPages, () => {
+            state.currentPage++; processData(); window.scrollTo({ top: 0, behavior: 'smooth' });
+        }));
     };
-
-    // --- Event Handlers ---
 
     fetch('pits_data.json')
         .then(res => res.json())
         .then(json => {
             allPits = json.data;
+            highlightActiveLink();
             processData();
         })
         .catch(err => console.error('Error loading pits data:', err));
 
     perPageSelect?.addEventListener('change', (e) => {
-        const val = e.target.value;
-        state.itemsPerPage = val === 'all' ? 'all' : parseInt(val, 10);
+        state.itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10);
         state.currentPage = 1; 
         processData();
     });
@@ -169,22 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
         processData();
     });
 
-    const updateSortUI = (column) => {
-        sortableHeaders.forEach(h => {
-            h.classList.remove('sort-asc', 'sort-desc');
-            if (h.getAttribute('data-sort') === column) {
-                h.classList.add(state.sortDirection === 1 ? 'sort-asc' : 'sort-desc');
-            }
-        });
-    };
-
     sortableHeaders.forEach(header => {
         header.addEventListener('click', () => {
             const col = header.getAttribute('data-sort');
             state.sortDirection = (state.sortColumn === col) ? state.sortDirection * -1 : 1;
             state.sortColumn = col;
             state.currentPage = 1; 
-            updateSortUI(col);
+            
+            sortableHeaders.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+            header.classList.add(state.sortDirection === 1 ? 'sort-asc' : 'sort-desc');
             processData();
         });
     });
