@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let state = {
         searchTerm: '',
         activeFilter: 'all', 
-        sortColumn: 'length',    // Set to length
+        sortColumn: 'depth',     // Set to depth
         sortDirection: -1,
-        rankColumn: 'length',    // Set to length
+        rankColumn: 'depth',     // Set to depth
         isMetric: true,
         currentPage: 1,      
         itemsPerPage: 100

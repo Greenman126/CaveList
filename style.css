@@ -1,158 +1,201 @@
 :root {
-    --primary-blue: #0066cc;
-    --hover-blue: #0056b3;
-    --light-gray: #f4f4f4;
-    --border-color: #ddd;
+    /* Exact NSS Brand Colors */
+    --nss-maroon: #894542;    /* Dark Navy Blue */
+    --nss-gold: #ffcc00;    /* Bright Gold */
+    --nss-light-blue: #006699;
+    --text-main: #333;
+    --bg-light: #fefef2;
+    --border-gray: #e7e5d6;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* NSS uses clean sans-serif fonts like Open Sans or Arial */
+    font-family: 'Open Sans', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
-    line-height: 1.5;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.6;
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
 }
 
 header {
-    background-color: #fff;
-    padding: 30px 20px;
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-light);
+    padding: 20px 0;
+    border-bottom: 5px solid var(--nss-maroon); 
     text-align: center;
+}
+
+header h1 {
+    color: var(--nss-maroon);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+/* Navigation - Keeping your structure but updating the "vibe" */
+header nav {
+    background-color: var(--nss-maroon);
+    padding: 10px 0;
+    margin-top: 15px;
 }
 
 header nav a {
-    margin: 0 15px;
+    color: #ffffff;
     text-decoration: none;
-    color: var(--primary-blue);
-    font-weight: bold;
+    font-weight: 600;
+    margin: 0 15px;
+    font-size: 16px;
 }
 
-/* Filters and Controls */
+header nav a:hover {
+    color: var(--nss-gold);
+}
+
+/* Filters Section */
 .filters {
+    background-color: #f8f8f8;
     padding: 20px;
-    background: #fff;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.filter-group {
+    border: 1px solid var(--border-gray);
+    margin: 20px 0;
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .filter-btn {
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 6px 12px;
-    margin: 4px;
-    border-radius: 4px;
+    background-color: #ffffff;
+    border: 1px solid var(--nss-maroon);
+    color: var(--nss-maroon);
+    padding: 8px 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: 0.2s;
 }
 
 .filter-btn.active, .filter-btn:hover {
-    background-color: var(--primary-blue);
-    color: #fff;
-    border-color: var(--primary-blue);
+    background-color: var(--nss-maroon);
+    color: #ffffff;
 }
 
-.top-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-}
-
-/* Table Styles */
+/* Table Styling - Clean and Professional */
 .table-container {
-    overflow: visible; /* Changed from overflow-x: auto */
-    padding: 20px;
+    margin-top: 20px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
+    border: 1px solid var(--border-gray);
 }
 
 th {
-    background-color: var(--light-gray);
-    font-weight: bold;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    background-color: var(--nss-maroon);
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 12px;
+    text-align: left;
 }
 
-th.sortable {
-    cursor: pointer;
-    user-select: none;
+td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-gray);
+    font-size: 14px;
 }
 
-th.sortable:hover {
-    background-color: #e0e0e0;
+tbody tr:nth-child(even) {
+    background-color: #f2f5f8; /* Very subtle blue-tinted gray */
 }
 
-tbody tr:nth-child(even) { background-color: #fcfcfc; }
-tbody tr:hover { background-color: #f1f1f1; }
+tbody tr:hover {
+    background-color: #fff9e6; /* Very subtle gold highlight */
+}
 
-/* Buttons & Inputs */
+/* Secondary Buttons (
+/* Layout for the search, unit toggle, and entries per page */
+.top-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Centering the pagination buttons at the bottom */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 30px 0;
+}
+
+/* Optional: Make the search input and buttons look more consistent */
 #searchInput {
     padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 250px;
+    border: 1px solid var(--border-gray);
+    min-width: 250px;
 }
 
 .secondary-btn {
-    padding: 8px 12px;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-weight: bold;
+    background-color: #ffffff;
+    border: 1px solid var(--nss-maroon);
+    color: var(--nss-maroon);
+    padding: 8px 16px;
+    font-weight: 600;
     cursor: pointer;
 }
 
 .secondary-btn:hover {
-    background-color: #444;
-    color: #fff;
+    background-color: var(--border-gray);
 }
 
-/* Pagination */
-.pagination-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    padding: 20px;
+/* Responsive adjustments for mobile screens */
+@media screen and (max-width: 768px) {
+    /* Stack the search and unit controls vertically */
+    .top-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Make the search input take full width */
+    #searchInput {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Allow the table to scroll horizontally without breaking the layout */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 20px;
+    }
+
+    /* Reduce padding and font size for dense data */
+    td, th {
+        padding: 8px 5px;
+        font-size: 12px;
+    }
+
+    /* Ensure the navigation links don't crowd each other */
+    header nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px 0;
+    }
+
+    header nav a {
+        margin: 0;
+    }
 }
 
-.page-btn {
-    padding: 8px 16px;
-    cursor: pointer;
-    border: 1px solid var(--primary-blue);
-    background: var(--primary-blue);
-    color: white;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.page-btn:disabled {
-    background: #ccc;
-    border-color: #999;
-    cursor: not-allowed;
+header nav a.active {
+    color: var(--nss-gold);
+    border-bottom: 2px solid var(--nss-gold);
+    padding-bottom: 2px;
 }

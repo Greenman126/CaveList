@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worldwide Cave Rankings - Deep Pits</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Worldwide Cave Rankings - Deep Pits</h1>
+        <nav>
+    <a href="index.html" id="longestCavesBtn">Longest Caves</a>
+    <a href="deepest.html" id="deepestCavesBtn">Deepest Caves</a>
+    <a href="pits.html" class="active" id="deepPitsBtn">Deep Pits</a>
+    <a href="chambers.html" id="largestChambersBtn">Largest Chambers</a>
+</nav>
+    </header>
+
+    <main class="container">
+        <section class="filters">
+            <div class="top-controls">
+                <input type="text" id="searchInput" placeholder="Search pits...">
+                <button id="unitToggleBtn" class="secondary-btn">Switch to Imperial (ft)</button>
+                <div class="entries-control">
+                    <label for="perPageSelect">Entries per page:</label>
+                    <select id="perPageSelect">
+                        <option value="100" selected>100</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <div class="table-container">
+            <table id="caveTable">
+                <thead>
+                    <tr>
+                        <th># Rank</th>
+                        <th class="sortable" data-sort="Cave">Cave ↕</th>
+                        <th class="sortable" data-sort="Name">Name ↕</th>
+                        <th class="sortable" data-sort="Meters">Depth ↕</th>
+                        <th class="sortable" data-sort="Country">Country ↕</th>
+                        <th class="sortable" data-sort="State">State/Prov ↕</th>
+                        <th class="sortable" data-sort="County">County ↕</th>
+                        <th class="sortable" data-sort="Freefall">Freefall ↕</th>
+                        <th>Source</th>
+                        <th class="sortable" data-sort="Updated">Updated ↕</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="paginationControls" class="pagination-controls"></div>
+    </main>
+
+    <script src="pits_script.js"></script>
+</body>
+</html>

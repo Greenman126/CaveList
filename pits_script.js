@@ -1,27 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Elements ---
     const tableBody = document.getElementById('tableBody');
-    const filterButtons = document.querySelectorAll('.filter-btn');
     const sortableHeaders = document.querySelectorAll('.sortable');
     const unitToggleBtn = document.getElementById('unitToggleBtn');
     const searchInput = document.getElementById('searchInput');
-    const longestCavesBtn = document.getElementById('longestCavesBtn');
-    const deepestCavesBtn = document.getElementById('deepestCavesBtn');
-    // NEW Elements
     const perPageSelect = document.getElementById('perPageSelect');
     const paginationControls = document.getElementById('paginationControls');
 
     // --- State Management ---
-    let allCaves = [];
+    let allPits = [];
     let state = {
         searchTerm: '',
-        activeFilter: 'all', 
-        sortColumn: 'length',    // Set to length
+        sortColumn: 'Meters',
         sortDirection: -1,
-        rankColumn: 'length',    // Set to length
         isMetric: true,
         currentPage: 1,      
-        itemsPerPage: 100
+        itemsPerPage: 100    
     };
 
     // --- Helpers ---
@@ -34,48 +28,47 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Core Logic ---
-
     const processData = () => {
-        // STEP 1: Type/Category Filter
-        let pipelineData = allCaves.filter(cave => {
-            const caveType = (cave.type || '').toLowerCase();
-            return state.activeFilter === 'all' || 
-                (state.activeFilter === 'limestone' ? (!caveType || caveType === 'limestone') : caveType === state.activeFilter);
+        let pipelineData = [...allPits];
+
+        pipelineData = pipelineData.filter(pit => {
+            const depth = parseNum(pit.Meters);
+            return depth >= 250;
         });
 
-        // STEP 2: Rank the dataset
-        const rankKey = state.rankColumn === 'length' ? 'length_meters' : 'depth_meters';
-        pipelineData.sort((a, b) => parseNum(b[rankKey]) - parseNum(a[rankKey]));
-        pipelineData.forEach((cave, index) => cave.rank = index + 1);
 
-        // STEP 3: Search Filter
+        // STEP 1: Search Filter
         if (state.searchTerm) {
-            pipelineData = pipelineData.filter(cave => {
-                return [cave.cave_name, cave.country, cave.state].some(field => 
+            pipelineData = pipelineData.filter(pit => {
+                return [pit.Cave, pit.Name, pit.Country, pit.State, pit.County].some(field => 
                     normalize(field).includes(state.searchTerm)
                 );
             });
         }
 
-        // STEP 4: User UI Sort
-        const mapping = { name: 'cave_name', length: 'length_meters', depth: 'depth_meters' };
-        const sortKey = mapping[state.sortColumn] || state.sortColumn;
+        // STEP 2: Calculate Global Rank based strictly on Meters (Depth)
+        // (Because the raw JSON data has US pits and Global pits separated)
+        const rankedData = [...allPits].sort((a, b) => parseNum(b.Meters) - parseNum(a.Meters));
+        const rankMap = new Map();
+        rankedData.forEach((pit, index) => rankMap.set(pit.Cave + pit.Name, index + 1));
+        
+        pipelineData.forEach(pit => pit.rank = rankMap.get(pit.Cave + pit.Name));
 
+        // STEP 3: User UI Sort
         pipelineData.sort((a, b) => {
-            const valA = a[sortKey];
-            const valB = b[sortKey];
+            const valA = a[state.sortColumn];
+            const valB = b[state.sortColumn];
 
-            if (state.sortColumn === 'length' || state.sortColumn === 'depth') {
+            if (state.sortColumn === 'Meters') {
                 return (parseNum(valA) - parseNum(valB)) * state.sortDirection;
             }
             return String(valA || '').localeCompare(String(valB || ''), undefined, { sensitivity: 'accent' }) * state.sortDirection;
         });
 
-        // STEP 5: Pagination (NEW)
+        // STEP 4: Pagination
         const totalItems = pipelineData.length;
         let totalPages = state.itemsPerPage === 'all' ? 1 : Math.ceil(totalItems / state.itemsPerPage);
         
-        // Safety check if current page exceeds total pages after filtering
         if (state.currentPage > totalPages && totalPages > 0) {
             state.currentPage = totalPages;
         }
@@ -87,40 +80,39 @@ document.addEventListener('DOMContentLoaded', () => {
             paginatedData = pipelineData.slice(startIndex, endIndex);
         }
 
-        // STEP 6: Render
+        // STEP 5: Render
         render(paginatedData);
-        renderPagination(totalItems, totalPages); // NEW
+        renderPagination(totalItems, totalPages);
     };
 
     const render = (data) => {
-        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="11" style="text-align:center;">No matching caves found.</td></tr>';
+        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="11" style="text-align:center;">No matching pits found.</td></tr>';
         
-        data.forEach(cave => {
-            const mLen = parseFloat(cave.length_meters);
-            const mDep = parseFloat(cave.depth_meters);
-
-            const lenDisp = mLen ? (state.isMetric ? `${mLen.toLocaleString()} m` : `${(mLen * 0.000621371).toFixed(2)} mi`) : 'N/A';
-            const depDisp = mDep ? (state.isMetric ? `${mDep.toLocaleString()} m` : `${Math.round(mDep * 3.28084).toLocaleString()} ft`) : 'N/A';
+        data.forEach(pit => {
+            const mDep = parseFloat(pit.Meters);
+            
+            // Format depth for Metric vs Imperial
+            const depDisp = mDep ? (state.isMetric ? `${mDep.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})} m` : `${Math.round(mDep * 3.28084).toLocaleString()} ft`) : 'N/A';
 
             const row = `
                 <tr>
-                    <td>${cave.rank}</td>
-                    <td>${cave.cave_name || 'N/A'}</td>
-                    <td>${cave.country || 'N/A'}</td>
-                    <td>${cave.state || 'N/A'}</td>
-                    <td>${cave.county || 'N/A'}</td> 
-                    <td>${lenDisp}</td>
+                    <td><strong>${pit.rank || '-'}</strong></td>
+                    <td>${pit.Cave || 'N/A'}</td>
+                    <td>${pit.Name || '-'}</td>
                     <td>${depDisp}</td>
-                    <td>${cave.type || '-'}</td>
-                    <td>${cave.source || 'N/A'}</td>
-                    <td>${cave.date || 'N/A'}</td>
-                    <td>${cave.comment || ''}</td>
+                    <td>${pit.Country || 'N/A'}</td>
+                    <td>${pit.State || 'N/A'}</td>
+                    <td>${pit.County || 'N/A'}</td> 
+                    <td>${pit.Freefall || '-'}</td>
+                    <td>${pit.Source || 'N/A'}</td>
+                    <td>${pit.Updated || '-'}</td>
+                    <td>${pit.Comment || ''}</td>
                 </tr>`;
             tableBody.insertAdjacentHTML('beforeend', row);
         });
     };
 
-    // NEW: Render Pagination Controls
+    // Render Pagination Controls
     const renderPagination = (totalItems, totalPages) => {
         paginationControls.innerHTML = '';
         
@@ -133,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.addEventListener('click', () => {
             state.currentPage--;
             processData();
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Optional: scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
         paginationControls.appendChild(prevBtn);
 
@@ -149,43 +141,32 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', () => {
             state.currentPage++;
             processData();
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Optional: scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
         paginationControls.appendChild(nextBtn);
     };
 
     // --- Event Handlers ---
 
-    fetch('caves_data.json')
+    fetch('pits_data.json')
         .then(res => res.json())
         .then(json => {
-            allCaves = json.data;
+            allPits = json.data;
             processData();
         })
-        .catch(err => console.error('Error loading cave data:', err));
+        .catch(err => console.error('Error loading pits data:', err));
 
-    // NEW: Items per page selector listener
     perPageSelect?.addEventListener('change', (e) => {
         const val = e.target.value;
         state.itemsPerPage = val === 'all' ? 'all' : parseInt(val, 10);
-        state.currentPage = 1; // Reset to page 1 on change
+        state.currentPage = 1; 
         processData();
     });
 
     searchInput?.addEventListener('input', (e) => {
         state.searchTerm = normalize(e.target.value);
-        state.currentPage = 1; // Reset page on search
+        state.currentPage = 1; 
         processData();
-    });
-
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            state.activeFilter = btn.getAttribute('data-type').toLowerCase();
-            state.currentPage = 1; // Reset page on filter change
-            processData();
-        });
     });
 
     const updateSortUI = (column) => {
@@ -202,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const col = header.getAttribute('data-sort');
             state.sortDirection = (state.sortColumn === col) ? state.sortDirection * -1 : 1;
             state.sortColumn = col;
-            state.currentPage = 1; // Reset page on sort
+            state.currentPage = 1; 
             updateSortUI(col);
             processData();
         });
@@ -210,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     unitToggleBtn.addEventListener('click', () => {
         state.isMetric = !state.isMetric;
-        unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (mi/ft)' : 'Switch to Metric (m)';
+        unitToggleBtn.textContent = state.isMetric ? 'Switch to Imperial (ft)' : 'Switch to Metric (m)';
         processData();
     });
 });

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worldwide Cave Rankings - Largest Chambers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Worldwide Cave Rankings - Largest Chambers</h1>
+        <nav>
+    <a href="index.html" id="longestCavesBtn">Longest Caves</a>
+    <a href="deepest.html" id="deepestCavesBtn">Deepest Caves</a>
+    <a href="pits.html" id="deepPitsBtn">Deep Pits</a>
+    <a href="chambers.html" class="active" id="largestChambersBtn">Largest Chambers</a>
+</nav>
+    </header>
+
+    <main class="container">
+        <section class="filters">
+            <div class="top-controls">
+                <input type="text" id="searchInput" placeholder="Search chambers or countries...">
+                
+                <button id="unitToggleBtn" class="secondary-btn">Switch to Imperial (ft/ft²)</button>
+
+                <div class="entries-control">
+                    <label for="perPageSelect">Entries per page:</label>
+                    <select id="perPageSelect">
+                        <option value="100" selected>100</option>
+                        <option value="500">500</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <div class="table-container">
+            <table id="caveTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="cave_name">Chamber Name ↕</th>
+                        <th class="sortable" data-sort="country">Country ↕</th>
+                        <th class="sortable" data-sort="area_m2">Area ↕</th>
+                        <th class="sortable" data-sort="volume_million_m3">Volume ↕</th>
+                        <th class="sortable" data-sort="height_m">Height ↕</th>
+                        <th>Dimensions (L x W x H)</th>
+                        <th class="sortable" data-sort="data_type">Rank Type ↕</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="paginationControls" class="pagination-controls"></div>
+    </main>
+
+    <script src="chambers_script.js"></script>
+</body>
+</html>

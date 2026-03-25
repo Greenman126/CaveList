@@ -15,12 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let allCaves = [];
     let state = {
         searchTerm: '',
-        activeFilter: 'all', 
-        sortColumn: 'length',    // Set to length
+        activeFilter: 'all',
+        sortColumn: 'length',    // Locked to length
         sortDirection: -1,
-        rankColumn: 'length',    // Set to length
+        rankColumn: 'length',    // Locked to length
         isMetric: true,
-        currentPage: 1,      
+        currentPage: 1,
         itemsPerPage: 100
     };
 
