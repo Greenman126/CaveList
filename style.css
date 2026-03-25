@@ -199,3 +199,47 @@ header nav a.active {
     border-bottom: 2px solid var(--nss-gold);
     padding-bottom: 2px;
 }
+
+/* Make headers look interactive */
+th.sortable {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+    user-select: none; /* Prevents text highlighting when clicking fast */
+}
+
+/* Hover effect to show it's clickable */
+th.sortable:hover {
+    background-color: #a35a57; /* A slightly lighter version of your maroon */
+}
+
+/* Indicators for Active Sorting */
+th.sortable.sort-asc::after {
+    content: " ↑";
+    color: var(--nss-gold);
+    font-weight: bold;
+}
+
+th.sortable.sort-desc::after {
+    content: " ↓";
+    color: var(--nss-gold);
+    font-weight: bold;
+}
+
+/* Subtle indicator that a column is sortable but not active */
+th.sortable:not(.sort-asc):not(.sort-desc)::after {
+    content: " ↕";
+    opacity: 0.5;
+    font-size: 10px;
+}
+
+/* Class for measurements to prevent wrapping */
+.measure-cell {
+    white-space: nowrap;
+}
+
+/* Class to gently bold the primary metric */
+.primary-metric {
+    font-weight: 600;
+    color: #222;
+}

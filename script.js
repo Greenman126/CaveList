@@ -92,33 +92,37 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPagination(totalItems, totalPages); // NEW
     };
 
-    const render = (data) => {
-        tableBody.innerHTML = data.length ? '' : '<tr><td colspan="11" style="text-align:center;">No matching caves found.</td></tr>';
-        
-        data.forEach(cave => {
-            const mLen = parseFloat(cave.length_meters);
-            const mDep = parseFloat(cave.depth_meters);
+const render = (data) => {
+    tableBody.innerHTML = data.length ? '' : '<tr><td colspan="11" style="text-align:center;">No matching caves found.</td></tr>';
+    
+    data.forEach(cave => {
+        const mLen = parseFloat(cave.length_meters);
+        const mDep = parseFloat(cave.depth_meters);
 
-            const lenDisp = mLen ? (state.isMetric ? `${mLen.toLocaleString()} m` : `${(mLen * 0.000621371).toFixed(2)} mi`) : 'N/A';
-            const depDisp = mDep ? (state.isMetric ? `${mDep.toLocaleString()} m` : `${Math.round(mDep * 3.28084).toLocaleString()} ft`) : 'N/A';
+        const lenDisp = mLen ? (state.isMetric ? `${mLen.toLocaleString()} m` : `${(mLen * 0.000621371).toFixed(2)} mi`) : 'N/A';
+        const depDisp = mDep ? (state.isMetric ? `${mDep.toLocaleString()} m` : `${Math.round(mDep * 3.28084).toLocaleString()} ft`) : 'N/A';
 
-            const row = `
-                <tr>
-                    <td>${cave.rank}</td>
-                    <td>${cave.cave_name || 'N/A'}</td>
-                    <td>${cave.country || 'N/A'}</td>
-                    <td>${cave.state || 'N/A'}</td>
-                    <td>${cave.county || 'N/A'}</td> 
-                    <td>${lenDisp}</td>
-                    <td>${depDisp}</td>
-                    <td>${cave.type || '-'}</td>
-                    <td>${cave.source || 'N/A'}</td>
-                    <td>${cave.date || 'N/A'}</td>
-                    <td>${cave.comment || ''}</td>
-                </tr>`;
-            tableBody.insertAdjacentHTML('beforeend', row);
-        });
-    };
+        // Determine which class to apply based on the page type
+        const lengthClass = state.rankColumn === 'length' ? 'primary-metric' : '';
+        const depthClass = state.rankColumn === 'depth' ? 'primary-metric' : '';
+
+        const row = `
+            <tr>
+                <td>${cave.rank}</td>
+                <td>${cave.cave_name || 'N/A'}</td>
+                <td>${cave.country || 'N/A'}</td>
+                <td>${cave.state || 'N/A'}</td>
+                <td>${cave.county || 'N/A'}</td> 
+                <td class="measure-cell ${lengthClass}">${lenDisp}</td>
+                <td class="measure-cell ${depthClass}">${depDisp}</td>
+                <td>${cave.type || '-'}</td>
+                <td>${cave.source || 'N/A'}</td>
+                <td>${cave.date || 'N/A'}</td>
+                <td>${cave.comment || ''}</td>
+            </tr>`;
+        tableBody.insertAdjacentHTML('beforeend', row);
+    });
+};
 
     // NEW: Render Pagination Controls
     const renderPagination = (totalItems, totalPages) => {
