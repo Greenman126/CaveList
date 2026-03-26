@@ -15206,18 +15206,6 @@
     },
     {
       "type": "underwater",
-      "cave_name": "Wakulla-Leon Sinks Cave System",
-      "country": "USA",
-      "state": "Florida",
-      "county": "Leon/Wakulla",
-      "length_meters": 56681.1,
-      "depth_meters": "106.68",
-      "source": "Casey McKinlay e-mail",
-      "date": "2020-03",
-      "comment": ""
-    },
-    {
-      "type": "underwater",
       "cave_name": "Chip's Hole/Cals System (Pipeline)",
       "country": "USA",
       "state": "Florida",
