@@ -3626,18 +3626,6 @@
     },
     {
       "type": "",
-      "cave_name": "Trnuljcica",
-      "country": "Slovenia",
-      "state": "Kanin",
-      "county": "Skala nad Glavo",
-      "length_meters": 1224.8,
-      "depth_meters": "924.2",
-      "source": "Jure Ticar email",
-      "date": "2025-01",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Sistema Cheve (Cuicateco)",
       "country": "Mexico",
       "state": "Oaxaca",
@@ -3657,18 +3645,6 @@
       "length_meters": 1556.0,
       "depth_meters": "667.4",
       "source": "Jure Ticar email",
-      "date": "2025-01",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Paka Sala",
-      "country": "Slovenia",
-      "state": "Coastal Region",
-      "county": "Lov?en",
-      "length_meters": 1556.0,
-      "depth_meters": "667.4",
-      "source": "Jure Ti?ar email",
       "date": "2025-01",
       "comment": ""
     },
@@ -5522,18 +5498,6 @@
     },
     {
       "type": "",
-      "cave_name": "Torca de la Llana de Len",
-      "country": "Spain",
-      "state": "Cantabria",
-      "county": "Porracolina",
-      "length_meters": 13603.0,
-      "depth_meters": "624",
-      "source": "Jose Luis Membrado e-mail",
-      "date": "2023-04",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Sima 56 de Andara(Torca del Cueto de los Senderos)",
       "country": "Spain",
       "state": "Cantabria",
@@ -5625,18 +5589,6 @@
       "length_meters": 8697.0,
       "depth_meters": "143",
       "source": "Martin Ellis e-mail",
-      "date": "2023-03",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "HerbstHöehle (MaanderHöhle)",
-      "country": "Austria",
-      "state": "Salzburg",
-      "county": "Tennengebirge",
-      "length_meters": 1588.0,
-      "depth_meters": "1029",
-      "source": "Austrian Speleological Association (hoehle.org/laengste-tiefste)",
       "date": "2023-03",
       "comment": ""
     },
@@ -6188,18 +6140,6 @@
       "county": "Oberösterreich",
       "length_meters": 2033.0,
       "depth_meters": "251",
-      "source": "Austrian Speleological Association (hoehle.org/laengste-tiefste)",
-      "date": "2023-03",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "BleikogelHöhle (Hedwighoehle, P351)",
-      "country": "Austria",
-      "state": "Salzburg",
-      "county": "Tennengebirge",
-      "length_meters": 2000.0,
-      "depth_meters": "1023",
       "source": "Austrian Speleological Association (hoehle.org/laengste-tiefste)",
       "date": "2023-03",
       "comment": ""
@@ -15374,18 +15314,6 @@
     },
     {
       "type": "",
-      "cave_name": "Cukurpinar Dudeni",
-      "country": "Turkey",
-      "state": "Icel",
-      "county": "Anamur",
-      "length_meters": 3550.0,
-      "depth_meters": "1196",
-      "source": "http://www.bumak.boun.edu.tr/sayfa.php?bolum=raporlar&yazi=turkiyederinliksiralamasi",
-      "date": "2020-02",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Gruta do Padre",
       "country": "Brazil",
       "state": "Bahia",
@@ -24097,18 +24025,6 @@
       "comment": ""
     },
     {
-      "type": "",
-      "cave_name": "Wolf River (Jaguar) Cave (Saltpeter)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Fentress",
-      "length_meters": 13042.12,
-      "depth_meters": "67.36",
-      "source": "Kristen Bobo e-mail",
-      "date": "2016-10",
-      "comment": ""
-    },
-    {
       "type": "lava",
       "cave_name": "Mad Hatter Cave",
       "country": "USA",
@@ -24129,18 +24045,6 @@
       "length_meters": 412.09,
       "depth_meters": "",
       "source": "NSS Caves Files - Dick Blenz",
-      "date": "2016-10",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Grassy Cove Saltpetre Cave (Saltpeter)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Cumberland",
-      "length_meters": 12702.55,
-      "depth_meters": "111.86",
-      "source": "Deep Caves of TAG, John Stembel",
       "date": "2016-10",
       "comment": ""
     },
@@ -28334,18 +28238,6 @@
     },
     {
       "type": "",
-      "cave_name": "Honeycomb Cave (36) (Saltpeter)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "Marshall",
-      "length_meters": 2040.65,
-      "depth_meters": "8.23",
-      "source": "ACS",
-      "date": "2016-06",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Cave Creek Cave System",
       "country": "USA",
       "state": "Kentucky",
@@ -29901,18 +29793,6 @@
       "length_meters": 1500.0,
       "depth_meters": "",
       "source": "Grupo de Espeleologia de Canarias Benisahare",
-      "date": "2016-01",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Great Expecations Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "White",
-      "length_meters": 2042.26,
-      "depth_meters": "89.92",
-      "source": "Tenn.Cave Survey",
       "date": "2016-01",
       "comment": ""
     },
@@ -32114,18 +31994,6 @@
     },
     {
       "type": "",
-      "cave_name": "Fort-Pebbles Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Franklin",
-      "length_meters": 1985.93,
-      "depth_meters": "122.22",
-      "source": "Tenn.Cave Survey",
-      "date": "2015-02",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Cox Cave",
       "country": "USA",
       "state": "Missouri",
@@ -33170,18 +33038,6 @@
     },
     {
       "type": "",
-      "cave_name": "Warren Spring Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Bedford",
-      "length_meters": 3141.44,
-      "depth_meters": "28.35",
-      "source": "Tenn.Cave Survey",
-      "date": "2015-02",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Lost Creek Cave (Saltpeter)",
       "country": "USA",
       "state": "Tennessee",
@@ -33422,18 +33278,6 @@
     },
     {
       "type": "",
-      "cave_name": "La Cueva Guapa del norte",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "VanBuren",
-      "length_meters": 6400.36,
-      "depth_meters": "45.72",
-      "source": "TCS",
-      "date": "2015-02",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Morgan Cave (Saltpeter)",
       "country": "USA",
       "state": "Tennessee",
@@ -33578,18 +33422,6 @@
     },
     {
       "type": "",
-      "cave_name": "DePriest Branch Cave (Saltpeter)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Lewis",
-      "length_meters": 2697.26,
-      "depth_meters": "26.21",
-      "source": "James Reyome e-mail",
-      "date": "2015-02",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Kletno Bear Cave",
       "country": "Poland",
       "state": "",
@@ -33597,18 +33429,6 @@
       "length_meters": 2000.0,
       "depth_meters": "",
       "source": "Wikipedia",
-      "date": "2015-02",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Robinson Ridge Saltpeter Cave (Saltpeter)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Cannon /Coffee",
-      "length_meters": 5948.14,
-      "depth_meters": "111.25",
-      "source": "Tenn.Cave Survey",
       "date": "2015-02",
       "comment": ""
     },
@@ -33704,18 +33524,6 @@
       "county": "Perry",
       "length_meters": 4058.77,
       "depth_meters": "13.72",
-      "source": "Tenn.Cave Survey",
-      "date": "2015-02",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Crowover Saltpeter Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Franklin",
-      "length_meters": 4345.23,
-      "depth_meters": "20.73",
       "source": "Tenn.Cave Survey",
       "date": "2015-02",
       "comment": ""
@@ -36769,18 +36577,6 @@
       "comment": ""
     },
     {
-      "type": "gypsum",
-      "cave_name": "Widow Cave",
-      "country": "U.S.A.",
-      "state": "Oklahoma",
-      "county": "Major",
-      "length_meters": 1693.0,
-      "depth_meters": "",
-      "source": "NSS News V47N3P77",
-      "date": "2001-03",
-      "comment": ""
-    },
-    {
       "type": "",
       "cave_name": "Vandevander Cave",
       "country": "USA",
@@ -37333,18 +37129,6 @@
       "comment": ""
     },
     {
-      "type": "",
-      "cave_name": "Sauta (Blowing Wind) Cave (50)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "Jackson",
-      "length_meters": 4509.38,
-      "depth_meters": "45.72",
-      "source": "Bill Varnedoe e-mail",
-      "date": "1999-06",
-      "comment": ""
-    },
-    {
       "type": "lava",
       "cave_name": "Iglesia-Mina Superior",
       "country": "Mexico",
@@ -37729,18 +37513,6 @@
       "comment": ""
     },
     {
-      "type": "",
-      "cave_name": "Viva Silva Cave",
-      "country": "USA",
-      "state": "Alaska",
-      "county": "Heceta Island",
-      "length_meters": 0.0,
-      "depth_meters": "242.93",
-      "source": "Marcel LaPerriere e-mail",
-      "date": "1998-08",
-      "comment": ""
-    },
-    {
       "type": "gypsum",
       "cave_name": "Bingham Cave",
       "country": "USA",
@@ -37857,30 +37629,6 @@
       "length_meters": 2140.43,
       "depth_meters": "45.72",
       "source": "Ron Fulcher e-mail",
-      "date": "1998-01",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Sequoyah Cave (333)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "DeKalb",
-      "length_meters": 2079.27,
-      "depth_meters": "8.23",
-      "source": "ACS",
-      "date": "1998-01",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Long Island Cave (1300) (Saltpeter)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "Jackson",
-      "length_meters": 4193.95,
-      "depth_meters": "27.74",
-      "source": "ACS",
       "date": "1998-01",
       "comment": ""
     },
@@ -38234,18 +37982,6 @@
     },
     {
       "type": "",
-      "cave_name": "Tumbling Rock Cave (171) (Saltpeter)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "Jackson",
-      "length_meters": 9691.47,
-      "depth_meters": "138.38",
-      "source": "Georgia Underground V32N4P38]",
-      "date": "1996-09",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Walking Fern Pit (1598)",
       "country": "USA",
       "state": "Alabama",
@@ -38455,30 +38191,6 @@
       "state": "Tennessee",
       "county": "Bedford",
       "length_meters": 3347.44,
-      "depth_meters": "22.86",
-      "source": "TCS",
-      "date": "1996-01",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Goufffre",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Cumberland",
-      "length_meters": 3429.51,
-      "depth_meters": "156.97",
-      "source": "TCS",
-      "date": "1996-01",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Lookout Mountain Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Hamilton",
-      "length_meters": 3992.78,
       "depth_meters": "22.86",
       "source": "TCS",
       "date": "1996-01",
@@ -38746,18 +38458,6 @@
       "depth_meters": "142.95",
       "source": "Rocky Mtn. Caving",
       "date": "1993-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Spout Springs Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Bedford",
-      "length_meters": 2177.44,
-      "depth_meters": "41.15",
-      "source": "TLCL",
-      "date": "1992-09",
       "comment": ""
     },
     {
@@ -39104,30 +38804,6 @@
       "county": "Robertson",
       "length_meters": 1981.1,
       "depth_meters": "15.24",
-      "source": "TLCL",
-      "date": "1992-09",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Piney Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "White",
-      "length_meters": 2042.26,
-      "depth_meters": "73.15",
-      "source": "TCS",
-      "date": "1992-09",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Hairy Queen Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Putnam",
-      "length_meters": 2133.99,
-      "depth_meters": "7.62",
       "source": "TLCL",
       "date": "1992-09",
       "comment": ""
@@ -39525,18 +39201,6 @@
       "length_meters": 2357.0,
       "depth_meters": "894",
       "source": "Deep Caves of Mexico - Peter Sprouse",
-      "date": "1989-09",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Sinking Cove Cave System",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Franklin",
-      "length_meters": 8609.99,
-      "depth_meters": "139.29",
-      "source": "Rick Buice",
       "date": "1989-09",
       "comment": ""
     },
@@ -40322,18 +39986,6 @@
     },
     {
       "type": "",
-      "cave_name": "Buis Saltpeter Cave (Saltpeter)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Claiborne",
-      "length_meters": 1676.94,
-      "depth_meters": "45.72",
-      "source": "TCS",
-      "date": "1986-09",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Webber's Cave",
       "country": "USA",
       "state": "Kentucky",
@@ -40425,18 +40077,6 @@
       "length_meters": 2206.41,
       "depth_meters": "163.07",
       "source": "Buddy Lane",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Salt River Cave (221)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "Jackson",
-      "length_meters": 3683.79,
-      "depth_meters": "24.38",
-      "source": "ACS",
       "date": "1986-07",
       "comment": ""
     },
@@ -40550,30 +40190,6 @@
     },
     {
       "type": "",
-      "cave_name": "Jewett II Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Cumberland",
-      "length_meters": 5389.69,
-      "depth_meters": "193.85",
-      "source": "Charles Clark",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Indian Grave Point Cave (Saltpeter)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "DeKalb",
-      "length_meters": 5095.18,
-      "depth_meters": "34.14",
-      "source": "David Parr",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Johnsons Cave (Saltpeter)",
       "country": "USA",
       "state": "Tennessee",
@@ -40598,18 +40214,6 @@
     },
     {
       "type": "",
-      "cave_name": "Run to the Mill (Bore Hole) Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Cumberland",
-      "length_meters": 4708.94,
-      "depth_meters": "116.13",
-      "source": "Buddy Lane",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Campbell Saltpetre Cave (Saltpeter)",
       "country": "USA",
       "state": "Tennessee",
@@ -40617,30 +40221,6 @@
       "length_meters": 4572.15,
       "depth_meters": "15.24",
       "source": "Keith Goggin",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Hardins-Junkyard Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Davidson",
-      "length_meters": 4700.89,
-      "depth_meters": "37.19",
-      "source": "David Parr",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Monteagle Saltpetre Cave (Saltpeter)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Marion",
-      "length_meters": 1855.57,
-      "depth_meters": "15.24",
-      "source": "TCS - Neff",
       "date": "1986-07",
       "comment": ""
     },
@@ -40682,54 +40262,6 @@
     },
     {
       "type": "",
-      "cave_name": "Snail Shell Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Rutherford",
-      "length_meters": 15974.35,
-      "depth_meters": "43.89",
-      "source": "Jeff Sims",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Ten Mile Creek Pit",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Knox",
-      "length_meters": 1966.62,
-      "depth_meters": "23.16",
-      "source": "TCS - Neff",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Campbell Saltpetre Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Fentress",
-      "length_meters": 4572.15,
-      "depth_meters": "15.24",
-      "source": "Keith Goggin",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Stamps Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Putnam",
-      "length_meters": 7620.24,
-      "depth_meters": "30.48",
-      "source": "Gerald Moni",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Nickajack Cave",
       "country": "USA",
       "state": "Tennessee",
@@ -40749,18 +40281,6 @@
       "length_meters": 2407.58,
       "depth_meters": "33.83",
       "source": "TCS - Neff",
-      "date": "1986-07",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Jewett I Cave",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Cumberland",
-      "length_meters": 2877.51,
-      "depth_meters": "187.45",
-      "source": "Charles Clark",
       "date": "1986-07",
       "comment": ""
     },
@@ -41373,18 +40893,6 @@
       "length_meters": 2010.07,
       "depth_meters": "54.86",
       "source": "TCS - Gerald Moni",
-      "date": "1983-03",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Lost Sea (Craighead Caverns)",
-      "country": "USA",
-      "state": "Tennessee",
-      "county": "Monroe",
-      "length_meters": 2294.92,
-      "depth_meters": "84.12",
-      "source": "TCS - Moni",
       "date": "1983-03",
       "comment": ""
     },
@@ -42146,18 +41654,6 @@
     },
     {
       "type": "",
-      "cave_name": "Blue River Cave (177) (Saltpeter)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "Jackson",
-      "length_meters": 1899.03,
-      "depth_meters": "18.29",
-      "source": "ACS",
-      "date": "1980-04",
-      "comment": ""
-    },
-    {
-      "type": "",
       "cave_name": "Keeton Cave (446) (Saltpeter)",
       "country": "USA",
       "state": "Alabama",
@@ -42188,18 +41684,6 @@
       "county": "Marshall",
       "length_meters": 2301.36,
       "depth_meters": "8.23",
-      "source": "ACS",
-      "date": "1980-04",
-      "comment": ""
-    },
-    {
-      "type": "",
-      "cave_name": "Ivy Hollow Cave (8) (Saltpeter)",
-      "country": "USA",
-      "state": "Alabama",
-      "county": "Lawrence",
-      "length_meters": 1965.01,
-      "depth_meters": "",
       "source": "ACS",
       "date": "1980-04",
       "comment": ""
@@ -47054,18 +46538,6 @@
     },
     {
       "type": "conglomerate_schist",
-      "cave_name": "Cueva del Portillo de la Peña",
-      "country": "Honduras",
-      "state": "Olancho",
-      "county": "El Rosario",
-      "length_meters": 1615.0,
-      "depth_meters": "84",
-      "source": "NSS NEWS V69N1P9",
-      "date": "2026-01",
-      "comment": ""
-    },
-    {
-      "type": "conglomerate_schist",
       "cave_name": "Fuente Grande",
       "country": "Spain",
       "state": "Castilla y León",
@@ -48070,18 +47542,6 @@
       "depth_meters": "187",
       "source": "Jordi Lloret-Prieto e-mail",
       "date": "2026-06",
-      "comment": ""
-    },
-    {
-      "type": "salt",
-      "cave_name": "pestera 6S de la Manzalesti",
-      "country": "Romania",
-      "state": "Vrancea",
-      "county": "Subcarpatii Vrancei",
-      "length_meters": 3234.0,
-      "depth_meters": "42",
-      "source": "Alex Pologea e-mail",
-      "date": "2026-04",
       "comment": ""
     },
     {
