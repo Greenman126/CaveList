@@ -56,6 +56,15 @@ header {
     padding: 30px 20px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    position: relative; /* <-- Add this line */
+}
+
+.header-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 90px; /* Adjust size as needed */
+    height: auto;
 }
 
 .page-title {
@@ -83,7 +92,7 @@ header {
 }
 
 .group-label {
-    color: var(--nss-brown); /* Updated to NSS Brown */
+    color: var(--nss-ivory); /* Updated to NSS Brown */
     font-weight: 800;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -299,5 +308,12 @@ th.sortable:not(.sort-asc):not(.sort-desc)::after {
     .entries-control {
         width: 100%;
         justify-content: center;
+    }
+
+    .header-logo {
+        position: static; /* Removes absolute positioning */
+        display: block;
+        margin: 0 auto 15px auto; /* Centers the logo above the title */
+        width: 70px; /* Slightly smaller for mobile */
     }
 }
