@@ -1,20 +1,47 @@
 :root {
-    /* Exact NSS Brand Colors */
-    --nss-maroon: #894542;
-    --nss-gold: #ffcc00;
-    --nss-light-blue: #006699;
-    --text-main: #333;
-    --bg-light: #fefef2;
+    /* Exact NSS Brand Colors (2022 Temporary Branding) */
+    --nss-gray-black: #333333;
+    --nss-navy: #344457;
+    --nss-red: #934445;
+    --nss-ivory: #FFFEF4;
+    --nss-brown: #8E7150;
+    
+    /* Layout Variables mapped to brand colors */
+    --text-main: var(--nss-gray-black);
+    --bg-light: var(--nss-ivory);
     --border-gray: #e7e5d6;
 }
 
 body {
-    font-family: 'Open Sans', Arial, sans-serif;
+    font-family: 'Sora', sans-serif;
+    font-size: 10pt; /* Updated to match 10 PT specification */
     margin: 0;
     padding: 0;
     background-color: var(--bg-light);
     color: var(--text-main);
     line-height: 1.6;
+}
+
+/* --- TYPOGRAPHY (Based on Brand Guidelines) --- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'EB Garamond', serif;
+    font-weight: bold;
+    margin-top: 0;
+}
+
+h1 { font-size: 24pt; }
+h2 { font-size: 22pt; }
+h3 { font-size: 20pt; }
+h4 { font-size: 18pt; }
+h5 { font-size: 16pt; }
+h6 { 
+    font-size: 14pt; 
+    font-variant: small-caps; 
+}
+
+.caption {
+    font-family: 'Sora', sans-serif;
+    font-size: 8pt;
 }
 
 .container {
@@ -25,16 +52,17 @@ body {
 
 /* --- HEADER & NAVIGATION --- */
 header {
-    background-color: var(--nss-maroon);
+    background-color: var(--nss-red);
     padding: 30px 20px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .page-title {
-    color: white;
+    font-family: 'EB Garamond', serif;
+    color: white; /* Kept white for contrast against the red header */
     margin: 0 0 20px 0;
-    font-size: 2.2rem;
+    font-size: 24pt; /* Matched to H1 */
     letter-spacing: 1px;
 }
 
@@ -49,13 +77,13 @@ header {
 .nav-group {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centers buttons when they wrap */
+    justify-content: center;
     gap: 12px;
-    flex-wrap: wrap; /* CRITICAL FIX: Allows buttons to wrap on mobile */
+    flex-wrap: wrap;
 }
 
 .group-label {
-    color: var(--nss-gold);
+    color: var(--nss-brown); /* Updated to NSS Brown */
     font-weight: 800;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -77,10 +105,10 @@ header {
 }
 
 .nav-link.active {
-    background-color: var(--nss-gold);
-    color: var(--nss-maroon);
+    background-color: var(--nss-brown); /* Updated to NSS Brown */
+    color: white; /* Adjusted for better contrast on brown */
     font-weight: bold;
-    border: 1px solid var(--nss-gold);
+    border: 1px solid var(--nss-brown);
 }
 
 .nav-separator {
@@ -113,8 +141,8 @@ header {
 
 .filter-btn {
     background-color: #ffffff;
-    border: 1px solid var(--nss-maroon);
-    color: var(--nss-maroon);
+    border: 1px solid var(--nss-red);
+    color: var(--nss-red);
     padding: 8px 16px;
     font-weight: 600;
     cursor: pointer;
@@ -123,14 +151,14 @@ header {
 }
 
 .filter-btn.active, .filter-btn:hover {
-    background-color: var(--nss-maroon);
+    background-color: var(--nss-red);
     color: #ffffff;
 }
 
 .secondary-btn {
     background-color: #ffffff;
-    border: 1px solid var(--nss-maroon);
-    color: var(--nss-maroon);
+    border: 1px solid var(--nss-red);
+    color: var(--nss-red);
     padding: 8px 16px;
     font-weight: 600;
     cursor: pointer;
@@ -144,38 +172,39 @@ header {
     padding: 8px 12px;
     border: 1px solid var(--border-gray);
     min-width: 250px;
+    font-family: 'Sora', sans-serif;
 }
 
 /* --- TABLE STYLING --- */
-/* CRITICAL FIX: Universal responsive container */
 .table-container {
     margin-top: 20px;
     width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS devices */
+    -webkit-overflow-scrolling: touch;
     margin-bottom: 20px;
 }
 
 table {
     width: 100%;
-    min-width: 800px; /* Forces horizontal scroll on small screens to prevent squishing */
+    min-width: 800px;
     border-collapse: collapse;
     border: 1px solid var(--border-gray);
 }
 
 th {
-    background-color: var(--nss-maroon);
+    background-color: var(--nss-red);
     color: #ffffff;
     text-transform: uppercase;
     font-size: 13px;
     padding: 12px;
     text-align: left;
+    font-family: 'Sora', sans-serif;
 }
 
 td {
     padding: 10px;
     border-bottom: 1px solid var(--border-gray);
-    font-size: 14px;
+    font-size: 10pt; /* Synced with body text */
 }
 
 tbody tr:nth-child(even) {
@@ -183,7 +212,7 @@ tbody tr:nth-child(even) {
 }
 
 tbody tr:hover {
-    background-color: #fff9e6;
+    background-color: #f0ebe1; /* Softened hover color to match palette tone */
 }
 
 /* Table Sorting Indicators */
@@ -195,18 +224,18 @@ th.sortable {
 }
 
 th.sortable:hover {
-    background-color: #a35a57;
+    background-color: #7a3839; /* Darkened NSS Red */
 }
 
 th.sortable.sort-asc::after {
     content: " ↑";
-    color: var(--nss-gold);
+    color: var(--nss-brown); /* Updated to NSS Brown */
     font-weight: bold;
 }
 
 th.sortable.sort-desc::after {
     content: " ↓";
-    color: var(--nss-gold);
+    color: var(--nss-brown); /* Updated to NSS Brown */
     font-weight: bold;
 }
 
@@ -223,14 +252,14 @@ th.sortable:not(.sort-asc):not(.sort-desc)::after {
 
 .primary-metric {
     font-weight: 600;
-    color: #222;
+    color: var(--nss-gray-black);
 }
 
 /* --- PAGINATION --- */
 .pagination-controls {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* Allows pagination buttons to wrap */
+    flex-wrap: wrap;
     gap: 10px;
     margin: 30px 0;
 }
@@ -264,7 +293,7 @@ th.sortable:not(.sort-asc):not(.sort-desc)::after {
 
     td, th {
         padding: 8px 5px;
-        font-size: 12px;
+        font-size: 9pt; /* Slightly scaled down for mobile */
     }
 
     .entries-control {
